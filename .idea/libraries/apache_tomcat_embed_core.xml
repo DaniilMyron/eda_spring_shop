@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="apache.tomcat.embed.core" type="repository">
+    <properties maven-id="org.apache.tomcat.embed:tomcat-embed-core:10.0.17" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/tomcat-embed-core-10.0.17.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/tomcat-annotations-api-10.0.17.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

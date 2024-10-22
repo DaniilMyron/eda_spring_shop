@@ -1,0 +1,44 @@
+server:
+  port: 8010
+
+jwt:
+  refresh-token-key: '{"kty":"oct","k":"g3DzsM80Aw74n5yarI3xZw"}'
+  cookie-token-key: '{"kty":"oct","k":"g3DzsM80Aw74n5yarI3xZw"}'
+spring:
+  kafka:
+    bootstrap-servers: 172.28.141.236:9092
+  application:
+    name: product
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    url: jdbc:postgresql://localhost:5432/product
+    username: miron
+    password: root
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        beans: DEBUG
+
+product-sv:
+  groupId: groupId
+  topic:
+    produces:
+      addProductToCart: miron-product-carted
+    consumes:
+      cartingProductEvent: miron-product-carting-result

@@ -13,9 +13,13 @@
   <!-- FIXME change it to the project's website -->
   <url>https://www.example.com</url>
   <modules>
-    <module>customer</module>
-    <module>fraud</module>
+    <module>carting-sv</module>
+    <module>product-sv</module>
     <module>eureka-server</module>
+    <module>security-lib</module>
+    <module>payment-sv</module>
+    <module>core</module>
+    <module>user-sv</module>
   </modules>
 
   <properties>
@@ -66,6 +70,10 @@
     <dependency>
       <groupId>io.zipkin.reporter2</groupId>
       <artifactId>zipkin-reporter-brave</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
     </dependency>
   </dependencies>
 

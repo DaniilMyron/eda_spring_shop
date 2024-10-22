@@ -7,9 +7,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="core" />
+        <module name="security-lib" />
+        <module name="carting-sv" />
+        <module name="payment-sv" />
         <module name="eureka-server" />
-        <module name="fraud" />
-        <module name="customer" />
+        <module name="product-sv" />
+        <module name="user-sv" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

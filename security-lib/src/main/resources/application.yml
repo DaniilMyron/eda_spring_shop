@@ -1,0 +1,4 @@
+jwt:
+  access-token-key: '{"kty":"oct","k":"Q785lzcUr5u-TVWFRBTdFl_iX2FJRtIwPHGm02ZLp6Y"}'
+  refresh-token-key: '{"kty":"oct","k":"g3DzsM80Aw74n5yarI3xZw"}'
+  cookie-token-key: '{"kty":"oct","k":"g3DzsM80Aw74n5yarI3xZw"}'

@@ -9,10 +9,17 @@ import org.springframework.kafka.config.TopicBuilder;
 @Configuration
 public class KafkaTopicConfig {
     @Value("${user-sv.topic.produces.userRegisteredEvent}")
-    private String topicName;
+    private String userRegisteredEvent;
+    @Value("${user-sv.topic.produces.checkBalanceEvent}")
+    private String checkBalanceEvent;
 
     @Bean
-    public NewTopic mironTopic(){
-        return TopicBuilder.name(topicName).build();
+    public NewTopic userRegisteredEventTopic(){
+        return TopicBuilder.name(userRegisteredEvent).build();
+    }
+
+    @Bean
+    public NewTopic checkBalanceEventTopic(){
+        return TopicBuilder.name(checkBalanceEvent).build();
     }
 }

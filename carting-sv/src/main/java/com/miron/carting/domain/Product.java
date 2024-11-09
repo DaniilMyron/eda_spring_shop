@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
 @Data
 @Builder
 @AllArgsConstructor
@@ -19,6 +17,5 @@ public class Product {
     private int id;
     private String name;
     private int cost;
-    private int count;
     private String description;
 }

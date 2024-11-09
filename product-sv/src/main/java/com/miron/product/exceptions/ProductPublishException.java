@@ -1,14 +1,11 @@
 package com.miron.product.exceptions;
 
 import com.miron.product.domain.Product;
-import com.miron.product.domain.PublishingProduct;
 import lombok.Getter;
 
 public class ProductPublishException extends RuntimeException{
     @Getter
     private Product product;
-    @Getter
-    private PublishingProduct publishingProduct;
 
     public ProductPublishException(Product product) {
         this.product = product;
@@ -35,8 +32,6 @@ public class ProductPublishException extends RuntimeException{
         this.product = product;
     }
 
-    public ProductPublishException(String message, final PublishingProduct publishingProduct) {
-        super(message);
-        this.publishingProduct  = publishingProduct;
-    }
+    public ProductPublishException(String message) {
+        super(message);}
 }

@@ -3,7 +3,6 @@ package com.miron.product.controllers;
 import com.miron.product.controllers.api.ProductRequest;
 import com.miron.product.controllers.api.ProductResponse;
 import com.miron.product.services.IProductService;
-import com.miron.product.services.models.impl.JSONPublisher;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,6 @@ public class ProductController {
     @PostMapping("/publish")
     public ResponseEntity<ProductResponse> publish(@RequestBody ProductRequest productRequest, int count){
         Object auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        productService.setPublisher(new JSONPublisher());
         var product = productService.findProductAndPublish(productRequest, count, auth);
         return ResponseEntity.ok(new ProductResponse(product.getId(), product.getName(), product.getCost(), product.getDescription()));
     }

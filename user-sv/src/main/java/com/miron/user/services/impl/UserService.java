@@ -1,47 +1,47 @@
 package com.miron.user.services.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.miron.core.message.ChangeBalanceStatusEnum;
+import com.miron.core.message.CheckBalanceStatusEnum;
+import com.miron.core.models.UserInfoForCheck;
 import com.miron.user.controllers.api.RegistrationRequest;
 import com.miron.user.domain.User;
+import com.miron.user.exceptions.UserRegisteredException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.core.KafkaTemplate;
 import com.miron.user.repositories.UserRepository;
 import com.miron.user.services.IUserService;
-import com.miron.user.services.models.IUserJsonPublisher;
-import com.miron.user.services.models.impl.UserJsonPublisher;
+import com.miron.user.publishers.IUserEventPublisher;
+import com.miron.user.publishers.impl.UserEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService implements IUserService, InitializingBean {
-    @Value("${user-sv.topic.produces.userRegisteredEvent}")
-    private String topicName;
-    @Autowired
-    private KafkaTemplate<String, Object> kafkaTemplate;
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
-    private final ObjectMapper objectMapper = new ObjectMapper();
-    private IUserJsonPublisher publisher;
+    private IUserEventPublisher publisher;
 
-    @Override
-    public void setPublisher(IUserJsonPublisher publisher) {
+    private void setPublisher(IUserEventPublisher publisher) {
         this.publisher = publisher;
     }
 
     @Override
     public void registerUser(RegistrationRequest request) {
+        var foundedUser = userRepository.findByUsername(request.username());
+        if(foundedUser != null) {
+            throw new UserRegisteredException("This username taken by another user: " + foundedUser, foundedUser);
+        }
         var user = userRepository.save(User.builder()
                 .username(request.username())
                 .password(passwordEncoder.encode(request.password()))
                 .balance(0)
+                .sumOnBuying(0)
                 .build());
         publisher.publish(user);
     }
@@ -64,7 +64,28 @@ public class UserService implements IUserService, InitializingBean {
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
-        setPublisher(new UserJsonPublisher(kafkaTemplate, topicName));
+    public void checkBalanceAndReserveOnBuying(String username, int requiredSum, int productRequestId) {
+        var user = userRepository.findByUsername(username);
+        var status = user.getBalance() >= requiredSum ? CheckBalanceStatusEnum.CONFIRMED : CheckBalanceStatusEnum.CANCELLED;
+        if(status == CheckBalanceStatusEnum.CONFIRMED) {
+            user.setSumOnBuying(requiredSum);
+            userRepository.save(user);
+        }
+        publisher.publishCheckBalanceEvent(username, requiredSum, productRequestId, status);
+    }
+
+    @Override
+    public void changeBalanceAndMakeCheck(String username, ChangeBalanceStatusEnum payloadStatus) {
+        var user = userRepository.findByUsername(username);
+        if(payloadStatus == ChangeBalanceStatusEnum.CONFIRMED) {
+            user.setBalance(user.getBalance() - user.getSumOnBuying());
+            publisher.publishUserInfoForCheck(new UserInfoForCheck(user.getSumOnBuying(), username));
+        }
+        user.setSumOnBuying(0);
+    }
+
+    @Override
+    public void afterPropertiesSet(){
+        setPublisher(new UserEventPublisher());
     }
 }

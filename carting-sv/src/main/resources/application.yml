@@ -31,11 +31,17 @@ management:
     sampling:
       probability: 1.0
 
-carting:
+carting-sv:
   groupId: groupId
   topic:
     produces:
-      cartingProductEvent: miron-product-carting-result
+      checkBalanceEvent: miron-check-balance-event-user
+      buyingFromCartEvent: miron-buying-from-cart-event-product
+      cancelBuyingFromCartEvent: miron-cancel-buying-from-cart-event-product
+      changeBalanceEvent: miron-change-balance-event-user
     consumes:
       productAddedToCartEvent: miron-product-carted
       userRegisteredEvent: miron-user-registered
+      checkBalanceEvent: miron-check-balance-event-result-carting
+      buyingFromCartEventResult: miron-buying-from-cart-event-result-carting
+      sendUserInfoEvent: miron-send-user-info-event-carting

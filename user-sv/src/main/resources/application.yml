@@ -39,3 +39,8 @@ user-sv:
   topic:
     produces:
       userRegisteredEvent: miron-user-registered
+      checkBalanceEvent: miron-check-balance-event-result-carting
+      sendUserInfoEvent: miron-send-user-info-event-carting
+    consumes:
+      checkBalanceEvent: miron-check-balance-event-user
+      changeBalanceEvent: miron-change-balance-event-user

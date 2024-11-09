@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserRegisteredEvent {
+public class UserRegisteredEvent implements EventMessage{
     private PublishedUser publishedUser;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private LocalDateTime timestamp;

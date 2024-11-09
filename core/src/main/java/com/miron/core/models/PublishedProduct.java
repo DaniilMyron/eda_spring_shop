@@ -13,7 +13,6 @@ public class PublishedProduct {
     private int id;
     private String name;
     private int cost;
-    private int count;
     private String description;
     private String authenticatedUsername;
 }

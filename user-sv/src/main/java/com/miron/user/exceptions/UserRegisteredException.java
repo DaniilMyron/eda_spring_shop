@@ -3,11 +3,11 @@ package com.miron.user.exceptions;
 import com.miron.user.domain.User;
 import lombok.Getter;
 
+@Getter
 public class UserRegisteredException extends RuntimeException{
-    @Getter
-    private User user;
+    private final User user;
 
-    public UserRegisteredException(User product) {
+    public UserRegisteredException(User user) {
         this.user = user;
     }
 

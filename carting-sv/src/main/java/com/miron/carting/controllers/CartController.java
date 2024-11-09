@@ -1,6 +1,8 @@
 package com.miron.carting.controllers;
 
+import com.miron.carting.controllers.model.ProductRequest;
 import com.miron.carting.domain.Cart;
+import com.miron.carting.services.ICartService;
 import com.miron.carting.services.impl.CartService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +16,20 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/v1/carts")
 public class CartController {
     @Autowired
-    private CartService cartService;
+    private ICartService cartService;
 
-    @GetMapping("/get-cart")
-    public ResponseEntity<Cart> getCart(@RequestBody int cartId){
-        Cart cart = cartService.findCart(cartId);
-        return ResponseEntity.ok().body(cart);
+    @PostMapping("/buy-all")
+    public ResponseEntity<String> buyAll(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        cartService.checkBalance(auth);
+        return ResponseEntity.ok().body("Buying all");
+    }
+
+    @PostMapping("/buy-single")
+    public ResponseEntity<String> buySingle(@RequestBody ProductRequest productRequest){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        cartService.checkBalance(auth, productRequest.id());
+        return ResponseEntity.ok().body("Buying one");
     }
 
     @GetMapping("/get-auth")

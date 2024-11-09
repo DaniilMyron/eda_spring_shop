@@ -40,5 +40,7 @@ product-sv:
   topic:
     produces:
       addProductToCart: miron-product-carted
+      buyingFromCartEventResult: miron-buying-from-cart-event-result-carting
     consumes:
-      cartingProductEvent: miron-product-carting-result
+      buyingFromCartEvent: miron-buying-from-cart-event-product
+      cancelBuyingFromCartEvent: miron-cancel-buying-from-cart-event-product

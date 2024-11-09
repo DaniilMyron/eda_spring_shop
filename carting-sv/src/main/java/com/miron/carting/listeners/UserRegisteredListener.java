@@ -7,6 +7,7 @@ import com.miron.carting.domain.User;
 import com.miron.carting.exceptions.InvalidMessageException;
 import com.miron.carting.repositories.CartRepository;
 import com.miron.carting.repositories.UserRepository;
+import com.miron.core.converter.StringPayloadDeserializer;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class UserRegisteredListener {
     public void listens(final String in) {
         log.info("Received user: {}", in);
         try {
-            var userJsonObject = readStringAsJSONObject(in);
+            var userJsonObject = StringPayloadDeserializer.readStringAsJSONObject(in);
             var user = userFromPayload(userJsonObject.getJSONObject("publishedUser"));
             userRepository.save(user);
             cartRepository.save(Cart.builder()
@@ -39,14 +40,6 @@ public class UserRegisteredListener {
         } catch(final InvalidMessageException ex) {
             log.error("Invalid message received: {}", in);
         }
-    }
-
-    private JSONObject readStringAsJSONObject(final String json) {
-        String toParse = json.substring(1, json.length() - 1);
-        toParse = toParse.replace("\\", "");
-        System.out.println(toParse);
-        JSONObject jsonObject = new JSONObject(toParse);
-        return new JSONObject(toParse);
     }
 
     private User userFromPayload(final JSONObject payload) {

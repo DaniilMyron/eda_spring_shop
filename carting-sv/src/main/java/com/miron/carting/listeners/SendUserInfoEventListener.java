@@ -28,7 +28,7 @@ public class SendUserInfoEventListener {
                     .authenticatedUsername(payloadUserInfo.getString("authenticatedUsername"))
                     .build();
             cartService.makeCheck(userInfo);
-            cartService.clearCart(userInfo);
+            cartService.clearCartDeleteLeftoverProducts(userInfo);
         } catch(final InvalidMessageException ex) {
             LOGGER.error("Invalid message received: {}", serializedSendUserInfoEvent);
         }

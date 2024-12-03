@@ -3,6 +3,7 @@ package com.miron.user.services;
 import com.miron.core.message.ChangeBalanceStatusEnum;
 import com.miron.user.controllers.api.RegistrationRequest;
 import com.miron.user.domain.User;
+import org.json.JSONObject;
 
 public interface IUserService {
     void registerUser(RegistrationRequest request);
@@ -12,5 +13,5 @@ public interface IUserService {
 
     void checkBalanceAndReserveOnBuying(String username, int requiredSum, int productRequiredId);
 
-    void changeBalanceAndMakeCheck(String username, ChangeBalanceStatusEnum payloadStatus);
+    void changeBalanceAndMakeCheck(String username, ChangeBalanceStatusEnum payloadStatus, JSONObject productsCountOnId);
 }

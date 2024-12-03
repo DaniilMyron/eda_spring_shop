@@ -5,6 +5,8 @@ import com.miron.core.models.UserInfoForCheck;
 import org.json.JSONObject;
 import org.springframework.security.core.Authentication;
 
+import java.util.Map;
+
 public interface ICartService {
     void checkBalance(Authentication authentication, int productRequestId);
     void checkBalance(Authentication authentication);
@@ -12,10 +14,15 @@ public interface ICartService {
     void buyFromCart(int productId, String username);
 
     void changeUserBalance(String username, ChangeBalanceStatusEnum changeBalanceStatusEnum);
+    void changeUserBalance(String username, ChangeBalanceStatusEnum changeBalanceStatusEnum, JSONObject productsCountOnId);
 
     void cancellBuyingFromCart(JSONObject cancelledProductsCount);
 
     void makeCheck(UserInfoForCheck userInfo);
 
-    void clearCart(UserInfoForCheck authenticatedUsername);
+    void clearCartDeleteLeftoverProducts(UserInfoForCheck authenticatedUsername);
+
+    void applyBuyingFromCart(JSONObject productsCountOnId);
+
+    void returnProductsInCart(Map<Integer, Integer> productsCountOnId);
 }

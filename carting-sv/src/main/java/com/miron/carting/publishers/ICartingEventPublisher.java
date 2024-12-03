@@ -2,6 +2,7 @@ package com.miron.carting.publishers;
 
 import com.miron.carting.domain.ProductInCart;
 import com.miron.core.message.ChangeBalanceStatusEnum;
+import org.json.JSONObject;
 import org.springframework.security.core.Authentication;
 
 import java.util.List;
@@ -14,5 +15,5 @@ public interface ICartingEventPublisher {
 
     void publishCancelBuyingEvent(Map<Integer, Integer> canceledProductsCount);
 
-    void publishChangeBalanceEvent(String username, ChangeBalanceStatusEnum changeBalanceStatusEnum);
+    void publishChangeBalanceEvent(String username, ChangeBalanceStatusEnum changeBalanceStatusEnum, Map<Integer, Integer> productsCountOnId);
 }

@@ -7,6 +7,7 @@ import com.miron.carting.domain.ProductInCart;
 import com.miron.carting.exceptions.CartingPublisherException;
 import com.miron.carting.publishers.ICartingEventPublisher;
 import com.miron.core.message.*;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,10 +84,11 @@ public class CartingEventPublisher implements ICartingEventPublisher {
     }
 
     @Override
-    public void publishChangeBalanceEvent(String username, ChangeBalanceStatusEnum changeBalanceStatusEnum) {
+    public void publishChangeBalanceEvent(String username, ChangeBalanceStatusEnum changeBalanceStatusEnum, Map<Integer, Integer> productsCountOnId) {
         try {
             EventMessage changeBalanceEvent = new ChangeBalanceEvent(
                     username,
+                    productsCountOnId,
                     LocalDateTime.now(),
                     changeBalanceStatusEnum
             );

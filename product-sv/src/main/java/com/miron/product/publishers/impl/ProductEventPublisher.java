@@ -50,13 +50,13 @@ public class ProductEventPublisher implements IProductEventPublisher {
     }
 
     @Override
-    public void publishBuyingFromCartEventResult(List<Product> changedProductsCount, boolean isConfirmed, String username, Map<Integer, Integer> count) {
+    public void publishBuyingFromCartEventResult(List<Product> changedProductsCount, boolean isConfirmed, String username, Map<Integer, Integer> productsCount) {
         try {
             BuyingFromCartEventResult buyingFromCartEventResult;
             if(isConfirmed) {
-                buyingFromCartEventResult = new BuyingFromCartEventResult(username, null, LocalDateTime.now(), BuyingFromCartStatusEnum.CONFIRMED, count);
+                buyingFromCartEventResult = new BuyingFromCartEventResult(username, null, LocalDateTime.now(), BuyingFromCartStatusEnum.CONFIRMED, productsCount);
             } else {
-                buyingFromCartEventResult = new BuyingFromCartEventResult(username, changedProductsCount, LocalDateTime.now(), BuyingFromCartStatusEnum.CANCELLED, count);
+                buyingFromCartEventResult = new BuyingFromCartEventResult(username, changedProductsCount, LocalDateTime.now(), BuyingFromCartStatusEnum.CANCELLED, productsCount);
             }
             final String payload = objectMapper.writeValueAsString(buyingFromCartEventResult);
             LOGGER.info("Sending buying from cart event result: {}", buyingFromCartEventResult);

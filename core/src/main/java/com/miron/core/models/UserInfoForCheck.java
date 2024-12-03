@@ -1,12 +1,10 @@
 package com.miron.core.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Builder
+@Setter(AccessLevel.NONE)
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserInfoForCheck {

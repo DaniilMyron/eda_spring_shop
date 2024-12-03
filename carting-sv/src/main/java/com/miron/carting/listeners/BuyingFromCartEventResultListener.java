@@ -27,14 +27,15 @@ public class BuyingFromCartEventResultListener {
 
             var username = retrievedJsonObject.getString("authenticatedUsername");
             username = UsernameDeserializer.readUsernameFromPayload(username);
+            var productsCountOnId = retrievedJsonObject.getJSONObject("count");
             if(payloadStatus == BuyingFromCartStatusEnum.CANCELLED){
                 LOGGER.error("Not pass validation: {}", retrievedJsonObject.getJSONArray("productsInCart"));
 
-                var canceledProductsCount = retrievedJsonObject.getJSONObject("count");
-                cartService.cancellBuyingFromCart(canceledProductsCount);
+                cartService.cancellBuyingFromCart(productsCountOnId);
                 cartService.changeUserBalance(username, ChangeBalanceStatusEnum.REJECTED);
             } else if(payloadStatus == BuyingFromCartStatusEnum.CONFIRMED){
-                cartService.changeUserBalance(username, ChangeBalanceStatusEnum.CONFIRMED);
+                cartService.applyBuyingFromCart(productsCountOnId);
+                cartService.changeUserBalance(username, ChangeBalanceStatusEnum.CONFIRMED, productsCountOnId);
             }
         } catch(final InvalidMessageException ex) {
             LOGGER.error("Invalid message received: {}", serializedBuyingFromCartEventResult);

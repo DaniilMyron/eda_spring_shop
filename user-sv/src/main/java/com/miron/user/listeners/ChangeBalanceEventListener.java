@@ -24,8 +24,9 @@ public class ChangeBalanceEventListener {
             var retrievedJsonObject = StringPayloadDeserializer.readStringAsJSONObject(serializedChangeBalance);
             var payloadStatus = retrievedJsonObject.getEnum(ChangeBalanceStatusEnum.class, "status");
             var username = retrievedJsonObject.getString("authenticatedUsername");
+            var productsCountOnId = retrievedJsonObject.getJSONObject("productsCountOnId");
             username = UsernameDeserializer.readUsernameFromPayload(username);
-            userService.changeBalanceAndMakeCheck(username, payloadStatus);
+            userService.changeBalanceAndMakeCheck(username, payloadStatus, productsCountOnId);
         } catch(final InvalidMessageException ex) {
             LOGGER.error("Invalid message received: {}", serializedChangeBalance);
         }

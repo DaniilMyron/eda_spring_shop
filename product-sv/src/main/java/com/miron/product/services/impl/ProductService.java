@@ -40,23 +40,23 @@ public class ProductService implements IProductService, InitializingBean {
     public void isCountValid(JSONArray productsInCartArray, String username) {
         List<Product> validCountProducts = new ArrayList<>();
         List<Product> invalidCountProducts = new ArrayList<>();
-        Map<Integer, Integer> countArray = new HashMap<>();
+        Map<Integer, Integer> productsCountArray = new HashMap<>();
         for(int i = 0; i < productsInCartArray.length(); i++) {
             var productId = productsInCartArray.getJSONObject(i).getInt("productId");
-            var count = productsInCartArray.getJSONObject(i).getInt("count");
-            countArray.put(productId, count);
+            var productsCount = productsInCartArray.getJSONObject(i).getInt("count");
+            productsCountArray.put(productId, productsCount);
             var product = productRepository.findById(productId).orElseThrow();
-            if(product.getCount() - count < 0) {
+            if(product.getCount() - productsCount < 0) {
                 invalidCountProducts.add(product);
             }
             validCountProducts.add(product);
         }
 
         if (invalidCountProducts.isEmpty()) {
-            publisher.publishBuyingFromCartEventResult(validCountProducts, true, username, countArray);
-            minusProductCount(validCountProducts, countArray);
+            publisher.publishBuyingFromCartEventResult(validCountProducts, true, username, productsCountArray);
+            minusProductCount(validCountProducts, productsCountArray);
         } else {
-            publisher.publishBuyingFromCartEventResult(invalidCountProducts, false, username, countArray);
+            publisher.publishBuyingFromCartEventResult(invalidCountProducts, false, username, productsCountArray);
         }
     }
 

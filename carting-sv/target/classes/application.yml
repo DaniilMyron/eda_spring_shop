@@ -42,5 +42,6 @@ carting-sv:
     consumes:
       productAddedToCartEvent: miron-product-carted
       userRegisteredEvent: miron-user-registered
-      checkBalanceEvent: miron-check-balance-event-result-carting
+      checkBalanceEventResult: miron-check-balance-event-result-carting
       buyingFromCartEventResult: miron-buying-from-cart-event-result-carting
+      sendUserInfoForCheckEvent: miron-send-user-info-event-carting

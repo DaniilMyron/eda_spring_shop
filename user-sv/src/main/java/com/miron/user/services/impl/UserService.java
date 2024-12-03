@@ -1,11 +1,14 @@
 package com.miron.user.services.impl;
 
+import com.miron.core.converter.ObjectToMapConverter;
 import com.miron.core.message.ChangeBalanceStatusEnum;
 import com.miron.core.message.CheckBalanceStatusEnum;
+import com.miron.core.models.ProductsInCartToReturn;
 import com.miron.core.models.UserInfoForCheck;
 import com.miron.user.controllers.api.RegistrationRequest;
 import com.miron.user.domain.User;
 import com.miron.user.exceptions.UserRegisteredException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -75,11 +78,14 @@ public class UserService implements IUserService, InitializingBean {
     }
 
     @Override
-    public void changeBalanceAndMakeCheck(String username, ChangeBalanceStatusEnum payloadStatus) {
+    public void changeBalanceAndMakeCheck(String username, ChangeBalanceStatusEnum payloadStatus, JSONObject productsCountOnId) {
         var user = userRepository.findByUsername(username);
         if(payloadStatus == ChangeBalanceStatusEnum.CONFIRMED) {
             user.setBalance(user.getBalance() - user.getSumOnBuying());
             publisher.publishUserInfoForCheck(new UserInfoForCheck(user.getSumOnBuying(), username));
+        } else if(payloadStatus == ChangeBalanceStatusEnum.REJECTED){
+            var map = ObjectToMapConverter.convertJSONObjectToMap(productsCountOnId);
+            publisher.publishGetBackProductsInCart(new ProductsInCartToReturn(map));
         }
         user.setSumOnBuying(0);
     }

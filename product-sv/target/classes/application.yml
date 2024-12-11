@@ -21,10 +21,6 @@ spring:
     url: jdbc:postgresql://localhost:5432/product
     username: miron
     password: root
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
 management:
   tracing:
     sampling:
@@ -39,8 +35,8 @@ product-sv:
   groupId: groupId
   topic:
     produces:
-      addProductToCart: miron-product-carted
+      addProductToCartEvent: miron-add-product-to-cart-event-carting
       buyingFromCartEventResult: miron-buying-from-cart-event-result-carting
     consumes:
-      buyingFromCartEvent: miron-buying-from-cart-event-carting
-      cartingProductEvent: miron-product-carting-result
+      buyingFromCartEvent: miron-buying-from-cart-event-product
+      cancelBuyingFromCartEvent: miron-cancel-buying-from-cart-event-product

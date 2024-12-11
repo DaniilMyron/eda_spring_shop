@@ -3,6 +3,7 @@ package com.miron.product.controllers;
 import com.miron.product.controllers.api.ProductRequest;
 import com.miron.product.controllers.api.ProductResponse;
 import com.miron.product.services.IProductService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,9 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping("api/v1/products")
+@RequiredArgsConstructor
 public class ProductController {
-    @Autowired
-    private IProductService productService;
+    private final IProductService productService;
 
     @PostMapping("/publish")
     public ResponseEntity<ProductResponse> publish(@RequestBody ProductRequest productRequest, int count){

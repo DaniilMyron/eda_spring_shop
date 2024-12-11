@@ -10,7 +10,7 @@ import com.miron.core.message.BuyingFromCartStatusEnum;
 import com.miron.core.message.CancelBuyingFromCartEvent;
 import com.miron.product.listeners.BuyingFromCartEventCreatedListener;
 import com.miron.product.listeners.CancelBuyingFromCartEventListener;
-import com.miron.product.services.impl.ProductService;
+import com.miron.product.services.ProductService;
 import com.miron.product.publishers.impl.ProductEventPublisher;
 import lombok.AllArgsConstructor;
 import lombok.Data;

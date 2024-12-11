@@ -9,6 +9,7 @@ import com.miron.product.domain.Product;
 import com.miron.product.exceptions.InvalidMessageException;
 import com.miron.product.exceptions.ProductPublishException;
 import com.miron.product.publishers.IProductEventPublisher;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,13 +20,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+@RequiredArgsConstructor
 public class ProductEventPublisher implements IProductEventPublisher {
     @Value("${product-sv.topic.produces.addProductToCartEvent}")
     private String addProductToCartEvent;
     @Value("${product-sv.topic.produces.buyingFromCartEventResult}")
     private String buyingFromCartEventValue;
-    @Autowired
-    private KafkaTemplate<String, Object> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductEventPublisher.class);
 

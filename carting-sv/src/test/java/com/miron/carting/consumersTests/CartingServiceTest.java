@@ -2,11 +2,10 @@ package com.miron.carting.consumersTests;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.miron.carting.converters.ProductsInCartToResponseConverter;
-import com.miron.carting.domain.ProductInCart;
 import com.miron.carting.repositories.CartRepository;
 import com.miron.carting.repositories.ProductInCartRepository;
 import com.miron.carting.repositories.UserRepository;
-import com.miron.carting.services.impl.CartService;
+import com.miron.carting.services.CartService;
 import com.miron.core.models.UserInfoForCheck;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,13 +14,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.util.UUID;
 
 
 @SpringBootTest

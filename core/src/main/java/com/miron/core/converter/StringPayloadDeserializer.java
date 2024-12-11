@@ -10,7 +10,7 @@ public class StringPayloadDeserializer {
 
     public static JSONObject readStringAsJSONObject(final String json) throws JSONException {
         LOGGER.info("Incoming object: {}", json);
-        String toParse = json; //json.substring(1, json.lastIndexOf(',') -1); //1 for prod - 0 for test
+        String toParse = json.substring(1, json.length() - 1); //1 for prod - 0 for test
         toParse = toParse.replace("\\", "");
         LOGGER.info("Parsed object: {}", toParse);
         return new JSONObject(toParse);

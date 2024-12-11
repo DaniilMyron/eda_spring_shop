@@ -2,15 +2,12 @@ package com.miron.carting.listeners;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.miron.carting.domain.Cart;
-import com.miron.carting.domain.User;
 import com.miron.carting.exceptions.InvalidMessageException;
 import com.miron.carting.repositories.CartRepository;
 import com.miron.carting.repositories.UserRepository;
-import com.miron.carting.services.impl.CartService;
+import com.miron.carting.services.CartService;
 import com.miron.core.converter.StringPayloadDeserializer;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -29,7 +26,7 @@ public class UserRegisteredEventListener {
     @Autowired
     private CartService cartService;
 
-    @KafkaListener(topics = "miron-user-registered", groupId = "groupId")
+    @KafkaListener(topics = "miron-user-registered-event-carting", groupId = "groupId")
     public void listens(final String in) {
         log.info("Received user: {}", in);
         try {

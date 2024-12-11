@@ -1,4 +1,4 @@
-package com.miron.carting.services.impl;
+package com.miron.carting.services;
 
 import com.miron.carting.controllers.model.PageResponse;
 import com.miron.carting.controllers.model.ProductsInCartResponse;
@@ -7,18 +7,15 @@ import com.miron.carting.converters.ObjectToUserConverter;
 import com.miron.carting.converters.ProductsInCartToResponseConverter;
 import com.miron.carting.domain.*;
 import com.miron.carting.repositories.*;
-import com.miron.carting.services.ICartService;
 import com.miron.carting.publishers.ICartingEventPublisher;
-import com.miron.carting.publishers.impl.CartingEventPublisher;
 import com.miron.core.converter.ObjectToMapConverter;
 import com.miron.core.converter.UsernameDeserializer;
 import com.miron.core.message.ChangeBalanceStatusEnum;
 import com.miron.core.models.UserInfoForCheck;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,7 +28,8 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class CartService implements ICartService, InitializingBean {
+@RequiredArgsConstructor
+public class CartService implements ICartService {
     @Autowired
     private ProductInCartRepository productInCartRepository;
     @Autowired
@@ -46,8 +44,7 @@ public class CartService implements ICartService, InitializingBean {
     private UsersChecksRepository usersChecksRepository;
     private final ProductsInCartToResponseConverter productsInCartToResponseConverter = new ProductsInCartToResponseConverter();
     private static final Logger LOGGER = LoggerFactory.getLogger(CartService.class);
-    @Setter
-    private ICartingEventPublisher publisher;
+    private final ICartingEventPublisher publisher;
 
 
     @Override
@@ -212,11 +209,5 @@ public class CartService implements ICartService, InitializingBean {
                 productInCartRepository.delete(productInCart);
             }
         }
-    }
-
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        setPublisher(new CartingEventPublisher());
     }
 }

@@ -11,14 +11,17 @@ import com.miron.user.domain.User;
 import com.miron.user.exceptions.InvalidMessageException;
 import com.miron.user.exceptions.UserRegisteredException;
 import com.miron.user.publishers.IUserEventPublisher;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
+@RequiredArgsConstructor
 public class UserEventPublisher implements IUserEventPublisher {
     @Value("${user-sv.topic.produces.userRegisteredEvent}")
     private String userRegisteredEventTopic;
@@ -28,8 +31,7 @@ public class UserEventPublisher implements IUserEventPublisher {
     private String sendUserInfoEventValue;
     @Value("${user-sv.topic.produces.returnProductsInCartEventValue}")
     private String returnProductsInCartEventValue;
-    @Autowired
-    private KafkaTemplate<String, Object> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserEventPublisher.class);
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 

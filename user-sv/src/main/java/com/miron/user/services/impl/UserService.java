@@ -8,6 +8,7 @@ import com.miron.core.models.UserInfoForCheck;
 import com.miron.user.controllers.api.RegistrationRequest;
 import com.miron.user.domain.User;
 import com.miron.user.exceptions.UserRegisteredException;
+import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,18 +22,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService implements IUserService, InitializingBean {
+@RequiredArgsConstructor
+public class UserService implements IUserService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
-    private IUserEventPublisher publisher;
-
-    private void setPublisher(IUserEventPublisher publisher) {
-        this.publisher = publisher;
-    }
+    private final IUserEventPublisher publisher;
 
     @Override
     public void registerUser(RegistrationRequest request) {
@@ -88,10 +86,5 @@ public class UserService implements IUserService, InitializingBean {
             publisher.publishGetBackProductsInCart(new ProductsInCartToReturn(map));
         }
         user.setSumOnBuying(0);
-    }
-
-    @Override
-    public void afterPropertiesSet(){
-        setPublisher(new UserEventPublisher());
     }
 }

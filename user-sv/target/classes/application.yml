@@ -20,10 +20,6 @@ spring:
     url: jdbc:postgresql://localhost:5432/users
     username: miron
     password: root
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
 management:
   tracing:
     sampling:
@@ -38,4 +34,10 @@ user-sv:
   groupId: groupId
   topic:
     produces:
-      userRegisteredEvent: miron-user-registered
+      userRegisteredEvent: miron-user-registered-event-carting
+      checkBalanceEvent: miron-check-balance-event-result-carting
+      sendUserInfoForCheckEvent: miron-send-user-info-event-carting
+      returnProductsInCartEventValue: miron-return-products-in-cart-event-carting
+    consumes:
+      checkBalanceEvent: miron-check-balance-event-user
+      changeBalanceEvent: miron-change-balance-event-user

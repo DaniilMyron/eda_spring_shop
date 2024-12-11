@@ -6,8 +6,8 @@ jwt:
   refresh-token-key: '{"kty":"oct","k":"g3DzsM80Aw74n5yarI3xZw"}'
   cookie-token-key: '{"kty":"oct","k":"g3DzsM80Aw74n5yarI3xZw"}'
 spring:
-#  kafka:
-#    bootstrap-servers: 172.28.141.236:9092
+  kafka:
+    bootstrap-servers: 172.28.141.236:9092
   application:
     name: carting
   jpa:

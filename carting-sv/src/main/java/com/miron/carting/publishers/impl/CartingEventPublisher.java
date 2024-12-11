@@ -7,10 +7,9 @@ import com.miron.carting.domain.ProductInCart;
 import com.miron.carting.exceptions.CartingPublisherException;
 import com.miron.carting.publishers.ICartingEventPublisher;
 import com.miron.core.message.*;
-import org.json.JSONObject;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.Authentication;
@@ -19,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+@RequiredArgsConstructor
 public class CartingEventPublisher implements ICartingEventPublisher {
     @Value("${carting-sv.topic.produces.checkBalanceEvent}")
     private String checkBalanceEventValue;
@@ -28,8 +28,7 @@ public class CartingEventPublisher implements ICartingEventPublisher {
     private String cancelBuyingFromCartEventValue;
     @Value("${carting-sv.topic.produces.changeBalanceEvent}")
     private String changeBalanceEventValue;
-    @Autowired
-    private KafkaTemplate<String, Object> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
     private static final Logger LOGGER = LoggerFactory.getLogger(CartingEventPublisher.class);
 

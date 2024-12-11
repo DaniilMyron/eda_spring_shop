@@ -1,25 +1,21 @@
-package com.miron.product.services.impl;
+package com.miron.product.services;
 
 import com.miron.product.controllers.api.ProductRequest;
 import com.miron.product.domain.Product;
 import com.miron.product.repositories.ProductRepository;
-import com.miron.product.services.IProductService;
 import com.miron.product.publishers.IProductEventPublisher;
-import com.miron.product.publishers.impl.ProductEventPublisher;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
-public class ProductService implements IProductService, InitializingBean {
-    @Setter
-    @Autowired
-    private IProductEventPublisher publisher;
+@RequiredArgsConstructor
+public class ProductService implements IProductService {
+    private final IProductEventPublisher publisher;
     @Autowired
     private ProductRepository productRepository;
 
@@ -79,10 +75,5 @@ public class ProductService implements IProductService, InitializingBean {
             validCountProducts.set(iteration, product);
             iteration++;
         }
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        setPublisher(new ProductEventPublisher());
     }
 }

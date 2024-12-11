@@ -34,7 +34,7 @@
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
-        <version>3.3.4</version>
+        <version>3.2.5</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>
@@ -70,14 +70,6 @@
           <type>jar</type>
       </dependency>
       <dependency>
-          <groupId>io.micrometer</groupId>
-          <artifactId>micrometer-tracing-bridge-brave</artifactId>
-      </dependency>
-      <dependency>
-          <groupId>io.zipkin.reporter2</groupId>
-          <artifactId>zipkin-reporter-brave</artifactId>
-      </dependency>
-      <dependency>
           <groupId>com.fasterxml.jackson.datatype</groupId>
           <artifactId>jackson-datatype-jsr310</artifactId>
           <type>jar</type>
@@ -89,7 +81,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>3.3.4</version>
+                <version>3.2.5</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

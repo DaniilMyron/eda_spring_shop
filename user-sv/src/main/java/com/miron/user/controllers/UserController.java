@@ -3,6 +3,7 @@ package com.miron.user.controllers;
 import com.miron.user.controllers.api.RegistrationRequest;
 import com.miron.user.controllers.api.ReplenishBalance;
 import com.miron.user.services.IUserService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,9 +13,9 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping("api/v1/users")
+@RequiredArgsConstructor
 public class UserController {
-    @Autowired
-    private IUserService userService;
+    private final IUserService userService;
 
     @PostMapping("/auth")
     public ResponseEntity<String> authorization(){

@@ -21,10 +21,6 @@ spring:
     url: jdbc:postgresql://localhost:5432/product
     username: miron
     password: root
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
 management:
   tracing:
     sampling:

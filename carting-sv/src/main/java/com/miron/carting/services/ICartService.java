@@ -1,5 +1,7 @@
 package com.miron.carting.services;
 
+import com.miron.carting.controllers.model.PageResponse;
+import com.miron.carting.controllers.model.ProductsInCartResponse;
 import com.miron.core.message.ChangeBalanceStatusEnum;
 import com.miron.core.models.UserInfoForCheck;
 import org.json.JSONObject;
@@ -25,4 +27,10 @@ public interface ICartService {
     void applyBuyingFromCart(JSONObject productsCountOnId);
 
     void returnProductsInCart(Map<Integer, Integer> productsCountOnId);
+
+    void addProductToCart(JSONObject retrievedJsonObject);
+
+    void createCartOnUser(JSONObject userJsonObject);
+
+    PageResponse<ProductsInCartResponse> findAllProductsInCart(Authentication authentication, int page, int size);
 }

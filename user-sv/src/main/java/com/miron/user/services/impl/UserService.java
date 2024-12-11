@@ -46,7 +46,7 @@ public class UserService implements IUserService, InitializingBean {
                 .balance(0)
                 .sumOnBuying(0)
                 .build());
-        publisher.publish(user);
+        publisher.publishUserRegistrationEvent(user);
     }
 
     @Override

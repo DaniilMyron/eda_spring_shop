@@ -10,14 +10,14 @@
         <module name="core" />
         <module name="security-lib" />
         <module name="carting-sv" />
-        <module name="payment-sv" />
-        <module name="eureka-server" />
         <module name="product-sv" />
         <module name="user-sv" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="eureka-server" target="17" />
       <module name="miron" target="17" />
+      <module name="payment-sv" target="17" />
     </bytecodeTargetLevel>
   </component>
 </project>

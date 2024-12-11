@@ -1,27 +1,27 @@
 package com.miron.carting.domain;
 
+import com.miron.carting.domain.base.ChangeableDateEntityListener;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.UUID;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "product_in_cart")
-public class ProductInCart {
+public class ProductInCart extends ChangeableDateEntityListener {
     @Id
     private UUID id;
     private int productId;
     private String name;
     private int count;
     private String description;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "cart_id")
     private Cart cart;
 

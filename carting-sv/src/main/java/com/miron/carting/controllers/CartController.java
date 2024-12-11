@@ -1,6 +1,8 @@
 package com.miron.carting.controllers;
 
+import com.miron.carting.controllers.model.PageResponse;
 import com.miron.carting.controllers.model.ProductRequest;
+import com.miron.carting.controllers.model.ProductsInCartResponse;
 import com.miron.carting.domain.Cart;
 import com.miron.carting.services.ICartService;
 import com.miron.carting.services.impl.CartService;
@@ -30,6 +32,15 @@ public class CartController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         cartService.checkBalance(auth, productRequest.id());
         return ResponseEntity.ok().body("Buying one");
+    }
+
+    @GetMapping("/check-cart")
+    public ResponseEntity<PageResponse<ProductsInCartResponse>> checkCart(
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size,
+            Authentication auth
+    ){
+        return ResponseEntity.ok().body(cartService.findAllProductsInCart(auth, page, size));
     }
 
     @GetMapping("/get-auth")

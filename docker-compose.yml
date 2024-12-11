@@ -5,38 +5,86 @@ services:
     environment:
       POSTGRES_USER: miron
       POSTGRES_PASSWORD: root
-      PGDATA: /data/postgres
-      PGHOST: localhost
-    network_mode: host
+      PGDATA: /var/lib/postgresql/data
+      POSTGRES_DB: miron_services
+    networks:
+      - miron-services
     volumes:
       - postgres:/data/postgres
     ports:
       - "5432:5432"
     restart: unless-stopped
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: mironn206@gmail.com
-      PGADMIN_DEFAULT_PASSWORD: root
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
-    volumes:
-      - pgadmin:/var/lib/pgadmin
-    ports:
-      - "5050:80"
-    links:
-      - postgres:postgres
-    restart: unless-stopped
+
   zipkin:
     image: openzipkin/zipkin
     container_name: zipkin
     ports:
       - "9411:9411"
 
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.0
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  broker:
+    image: confluentinc/cp-kafka:7.3.0
+    container_name: broker
+    ports:
+      # To learn about configuring Kafka for access across networks see
+      # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+
+  mironservice:
+    build: .
+    container_name: mironservice
+    depends_on:
+      - broker
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: 'broker:29092'
+
+#  carting-sv:
+#    build: ./carting-sv
+#    container_name: carting-sv
+#    depends_on:
+#      - broker
+#      - mironservice
+#    environment:
+#      SPRING_KAFKA_BOOTSTRAP_SERVERS: 'broker:29092'
+#
+#  product-sv:
+#    build: ./product-sv
+#    container_name: product-sv
+#    depends_on:
+#      - broker
+#      - mironservice
+#    environment:
+#      SPRING_KAFKA_BOOTSTRAP_SERVERS: 'broker:29092'
+#
+#  user-sv:
+#    build: ./user-sv
+#    container_name: user-sv
+#    depends_on:
+#      - broker
+#      - mironservice
+#    environment:
+#      SPRING_KAFKA_BOOTSTRAP_SERVERS: 'broker:29092'
+
 networks:
-  postgres:
-  pgadmin:
+  miron-services:
+    driver: bridge
 
 volumes:
   postgres:
-  pgadmin:
+    driver: local

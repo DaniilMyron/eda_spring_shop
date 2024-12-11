@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ProductEventPublisher implements IProductEventPublisher {
-    @Value("${product-sv.topic.produces.addProductToCart}")
+    @Value("${product-sv.topic.produces.addProductToCartEvent}")
     private String addProductToCartEvent;
     @Value("${product-sv.topic.produces.buyingFromCartEventResult}")
     private String buyingFromCartEventValue;

@@ -38,7 +38,7 @@ user-sv:
   groupId: groupId
   topic:
     produces:
-      userRegisteredEvent: miron-user-registered
+      userRegisteredEvent: miron-user-registered-event-carting
       checkBalanceEvent: miron-check-balance-event-result-carting
       sendUserInfoForCheckEvent: miron-send-user-info-event-carting
       returnProductsInCartEventValue: miron-return-products-in-cart-event-carting

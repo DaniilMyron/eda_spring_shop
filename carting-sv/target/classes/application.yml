@@ -6,8 +6,8 @@ jwt:
   refresh-token-key: '{"kty":"oct","k":"g3DzsM80Aw74n5yarI3xZw"}'
   cookie-token-key: '{"kty":"oct","k":"g3DzsM80Aw74n5yarI3xZw"}'
 spring:
-  kafka:
-    bootstrap-servers: 172.28.141.236:9092
+#  kafka:
+#    bootstrap-servers: 172.28.141.236:9092
   application:
     name: carting
   jpa:
@@ -40,8 +40,9 @@ carting-sv:
       cancelBuyingFromCartEvent: miron-cancel-buying-from-cart-event-product
       changeBalanceEvent: miron-change-balance-event-user
     consumes:
-      productAddedToCartEvent: miron-product-carted
-      userRegisteredEvent: miron-user-registered
+      productAddedToCartEvent: miron-add-product-to-cart-event-carting
+      userRegisteredEvent: miron-user-registered-event-carting
       checkBalanceEventResult: miron-check-balance-event-result-carting
       buyingFromCartEventResult: miron-buying-from-cart-event-result-carting
       sendUserInfoForCheckEvent: miron-send-user-info-event-carting
+      returnProductsInCartEventValue: miron-return-products-in-cart-event-carting

@@ -89,7 +89,8 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/api/v1/products/hello",
                                 "/api/v1/products/hello2",
-                                "/api/v1/users/register")
+                                "/api/v1/users/register",
+                                "/api/v1/carts/check-cart")
                         .permitAll()
                         .anyRequest()
                         .authenticated()

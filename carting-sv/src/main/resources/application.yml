@@ -40,8 +40,8 @@ carting-sv:
       cancelBuyingFromCartEvent: miron-cancel-buying-from-cart-event-product
       changeBalanceEvent: miron-change-balance-event-user
     consumes:
-      productAddedToCartEvent: miron-product-carted
-      userRegisteredEvent: miron-user-registered
+      productAddedToCartEvent: miron-add-product-to-cart-event-carting
+      userRegisteredEvent: miron-user-registered-event-carting
       checkBalanceEventResult: miron-check-balance-event-result-carting
       buyingFromCartEventResult: miron-buying-from-cart-event-result-carting
       sendUserInfoForCheckEvent: miron-send-user-info-event-carting

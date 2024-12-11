@@ -39,7 +39,7 @@ product-sv:
   groupId: groupId
   topic:
     produces:
-      addProductToCart: miron-product-carted
+      addProductToCartEvent: miron-add-product-to-cart-event-carting
       buyingFromCartEventResult: miron-buying-from-cart-event-result-carting
     consumes:
       buyingFromCartEvent: miron-buying-from-cart-event-product

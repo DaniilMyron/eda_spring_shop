@@ -34,7 +34,7 @@ public class UserEventPublisher implements IUserEventPublisher {
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     @Override
-    public void publish(User user) {
+    public void publishUserRegistrationEvent(User user) {
         try {
             PublishedUser publishedUser = PublishedUser.builder()
                     .id(user.getId())

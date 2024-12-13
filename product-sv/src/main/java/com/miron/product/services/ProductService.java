@@ -2,6 +2,7 @@ package com.miron.product.services;
 
 import com.miron.product.controllers.api.ProductRequest;
 import com.miron.product.domain.Product;
+import com.miron.product.exceptions.ProductNotFoundException;
 import com.miron.product.repositories.ProductRepository;
 import com.miron.product.publishers.IProductEventPublisher;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class ProductService implements IProductService {
 
     @Override
     public Product findProductAndPublish(ProductRequest request, int count, Object auth) {
-        var product = productRepository.findById(request.id()).orElseThrow();
+        var product = productRepository.findById(request.id()).orElseThrow(ProductNotFoundException::new);
         publisher.publishOrderCreatingEvent(product, count, auth);
         return product;
     }
@@ -41,7 +42,7 @@ public class ProductService implements IProductService {
             var productId = productsInCartArray.getJSONObject(i).getInt("productId");
             var productsCount = productsInCartArray.getJSONObject(i).getInt("count");
             productsCountArray.put(productId, productsCount);
-            var product = productRepository.findById(productId).orElseThrow();
+            var product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
             if(product.getCount() - productsCount < 0) {
                 invalidCountProducts.add(product);
             }
@@ -61,7 +62,7 @@ public class ProductService implements IProductService {
         Iterator<String> iterator = cancelledProductsInCart.keys();
         while(iterator.hasNext()){
             var key = iterator.next();
-            var product = productRepository.findById(Integer.parseInt(key)).orElseThrow();
+            var product = productRepository.findById(Integer.parseInt(key)).orElseThrow(ProductNotFoundException::new);
             product.setCount(product.getCount() + cancelledProductsInCart.getInt(key));
             productRepository.saveAndFlush(product);
         }

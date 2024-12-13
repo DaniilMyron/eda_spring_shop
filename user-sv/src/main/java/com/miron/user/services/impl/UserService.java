@@ -7,6 +7,7 @@ import com.miron.core.models.ProductsInCartToReturn;
 import com.miron.core.models.UserInfoForCheck;
 import com.miron.user.controllers.api.RegistrationRequest;
 import com.miron.user.domain.User;
+import com.miron.user.exceptions.UserNotFoundException;
 import com.miron.user.exceptions.UserRegisteredException;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
@@ -34,7 +35,8 @@ public class UserService implements IUserService {
 
     @Override
     public void registerUser(RegistrationRequest request) {
-        var foundedUser = userRepository.findByUsername(request.username());
+        var foundedUser = userRepository.findByUsername(request.username())
+                .orElseThrow(UserNotFoundException::new);
         if(foundedUser != null) {
             throw new UserRegisteredException("This username taken by another user: " + foundedUser, foundedUser);
         }
@@ -58,7 +60,8 @@ public class UserService implements IUserService {
         int startPoint = authentication.toString().indexOf("Username=") + 9;
         int endPoint = authentication.toString().indexOf(",");
         var authenticatedUserUsername = authentication.toString().substring(startPoint, endPoint);
-        var authenticatedUser = userRepository.findByUsername(authenticatedUserUsername);
+        var authenticatedUser = userRepository.findByUsername(authenticatedUserUsername)
+                .orElseThrow(UserNotFoundException::new);
         authenticatedUser.setBalance(authenticatedUser.getBalance() + sum);
         userRepository.save(authenticatedUser);
         return authenticatedUser;
@@ -66,7 +69,8 @@ public class UserService implements IUserService {
 
     @Override
     public void checkBalanceAndReserveOnBuying(String username, int requiredSum, int productRequestId) {
-        var user = userRepository.findByUsername(username);
+        var user = userRepository.findByUsername(username)
+                .orElseThrow(UserNotFoundException::new);
         var status = user.getBalance() >= requiredSum ? CheckBalanceStatusEnum.CONFIRMED : CheckBalanceStatusEnum.CANCELLED;
         if(status == CheckBalanceStatusEnum.CONFIRMED) {
             user.setSumOnBuying(requiredSum);
@@ -77,7 +81,8 @@ public class UserService implements IUserService {
 
     @Override
     public void changeBalanceAndMakeCheck(String username, ChangeBalanceStatusEnum payloadStatus, JSONObject productsCountOnId) {
-        var user = userRepository.findByUsername(username);
+        var user = userRepository.findByUsername(username)
+                .orElseThrow(UserNotFoundException::new);
         if(payloadStatus == ChangeBalanceStatusEnum.CONFIRMED) {
             user.setBalance(user.getBalance() - user.getSumOnBuying());
             publisher.publishUserInfoForCheck(new UserInfoForCheck(user.getSumOnBuying(), username));

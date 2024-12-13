@@ -1,5 +1,6 @@
 package com.miron.user.config;
 
+import com.miron.user.exceptions.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,8 @@ public class JpaUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         LOGGER.info("LOADUSERBYUSERNAME");
-        var user = userRepository.findByUsername(username);
+        var user = userRepository.findByUsername(username)
+                .orElseThrow(UserNotFoundException::new);
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }

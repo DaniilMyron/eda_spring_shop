@@ -1,6 +1,8 @@
 package com.miron.carting.exceptions;
 
-public class CartNotFoundException extends CartingEntityNotFoundException{
+import com.miron.security_lib.handler.ServiceEntityNotFoundException;
+
+public class CartNotFoundException extends ServiceEntityNotFoundException {
     public CartNotFoundException() {
         super("No such cart found");
     }

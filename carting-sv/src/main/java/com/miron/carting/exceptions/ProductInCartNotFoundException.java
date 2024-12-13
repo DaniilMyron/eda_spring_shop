@@ -1,6 +1,8 @@
 package com.miron.carting.exceptions;
 
-public class ProductInCartNotFoundException extends CartingEntityNotFoundException {
+import com.miron.security_lib.handler.ServiceEntityNotFoundException;
+
+public class ProductInCartNotFoundException extends ServiceEntityNotFoundException {
     public ProductInCartNotFoundException(String message) {
         super(message);
     }

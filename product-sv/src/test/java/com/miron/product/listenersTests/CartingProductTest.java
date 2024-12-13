@@ -10,7 +10,7 @@ import com.miron.core.message.BuyingFromCartStatusEnum;
 import com.miron.core.message.CancelBuyingFromCartEvent;
 import com.miron.product.listeners.BuyingFromCartEventCreatedListener;
 import com.miron.product.listeners.CancelBuyingFromCartEventListener;
-import com.miron.product.services.ProductService;
+import com.miron.product.services.impl.ListenerService;
 import com.miron.product.publishers.impl.ProductEventPublisher;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -40,7 +40,7 @@ import java.util.List;
 @EmbeddedKafka(partitions = 1, brokerProperties = { "listeners=PLAINTEXT://172.28.141.236:9092", "port=9092" })
 class CartingProductTest {
     @Autowired
-    private ProductService productService;
+    private ListenerService listenerService;
 
     private User user;
 

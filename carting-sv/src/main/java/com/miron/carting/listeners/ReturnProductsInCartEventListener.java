@@ -1,7 +1,7 @@
 package com.miron.carting.listeners;
 
 import com.miron.carting.exceptions.InvalidMessageException;
-import com.miron.carting.services.impl.CartService;
+import com.miron.carting.services.impl.ListenerService;
 import com.miron.core.converter.ObjectToMapConverter;
 import com.miron.core.converter.StringPayloadDeserializer;
 import org.slf4j.Logger;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReturnProductsInCartEventListener {
     @Autowired
-    private CartService cartService;
+    private ListenerService listenerService;
     private static final Logger LOGGER = LoggerFactory.getLogger(ReturnProductsInCartEventListener.class);
 
 
@@ -24,7 +24,7 @@ public class ReturnProductsInCartEventListener {
             var retrievedJsonObject = StringPayloadDeserializer.readStringAsJSONObject(serializedReturnProductsInCartEvent);
             var productsCountOnId = ObjectToMapConverter.convertJSONObjectToMap(retrievedJsonObject.getJSONObject("productsCountOnId"));
 
-            cartService.returnProductsInCart(productsCountOnId);
+            listenerService.returnProductsInCart(productsCountOnId);
         } catch(final InvalidMessageException ex) {
             LOGGER.error("Invalid message received: {}", serializedReturnProductsInCartEvent);
         }

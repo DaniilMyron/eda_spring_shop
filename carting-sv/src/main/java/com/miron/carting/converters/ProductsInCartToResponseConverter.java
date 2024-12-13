@@ -2,8 +2,6 @@ package com.miron.carting.converters;
 
 import com.miron.carting.controllers.model.ProductsInCartResponse;
 import com.miron.carting.domain.ProductInCart;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.stereotype.Component;
 
 import java.util.function.Function;
 

@@ -1,15 +1,9 @@
 package com.miron.product.services;
 
-import com.miron.product.controllers.api.ProductRequest;
-import com.miron.product.domain.Product;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.miron.product.controllers.api.ProductResponse;
+import org.springframework.security.core.Authentication;
 
-public interface IProductService{
-    void discardCartedProduct(Product product);
-    Product findProductAndPublish(ProductRequest request, int count , Object auth);
+public interface IProductService {
+    ProductResponse findProductAndCart(int productId, int count , Authentication auth);
 
-    void isCountValid(JSONArray productsInCartArray, String username);
-
-    void returnCancelledProductsCount(JSONObject cancelledProductsInCart);
 }

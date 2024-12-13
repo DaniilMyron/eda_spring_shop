@@ -1,17 +1,12 @@
 package com.miron.user.services;
 
-import com.miron.core.message.ChangeBalanceStatusEnum;
 import com.miron.user.controllers.api.RegistrationRequest;
-import com.miron.user.domain.User;
-import org.json.JSONObject;
+import com.miron.user.controllers.api.UserResponse;
+import org.springframework.security.core.Authentication;
 
 public interface IUserService {
-    void registerUser(RegistrationRequest request);
+    UserResponse registerUser(RegistrationRequest request);
     void authenticateUser();
 
-    User getAuthenticatedUser(Object authentication, int sum);
-
-    void checkBalanceAndReserveOnBuying(String username, int requiredSum, int productRequiredId);
-
-    void changeBalanceAndMakeCheck(String username, ChangeBalanceStatusEnum payloadStatus, JSONObject productsCountOnId);
+    UserResponse replenishBalance(Authentication authentication, int sum);
 }

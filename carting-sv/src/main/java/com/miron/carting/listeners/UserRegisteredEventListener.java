@@ -1,7 +1,7 @@
 package com.miron.carting.listeners;
 
 import com.miron.carting.exceptions.InvalidMessageException;
-import com.miron.carting.services.impl.CartService;
+import com.miron.carting.services.impl.ListenerService;
 import com.miron.core.converter.StringPayloadDeserializer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,14 +12,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserRegisteredEventListener {
     @Autowired
-    private CartService cartService;
+    private ListenerService listenerService;
 
     @KafkaListener(topics = "miron-user-registered-event-carting", groupId = "groupId")
     public void listens(final String in) {
         log.info("Received user: {}", in);
         try {
             var userJsonObject = StringPayloadDeserializer.readStringAsJSONObject(in);
-            cartService.createCartOnUser(userJsonObject);
+            listenerService.createCartOnUser(userJsonObject);
         } catch(final InvalidMessageException ex) {
             log.error("Invalid message received: {}", in);
         }

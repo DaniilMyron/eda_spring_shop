@@ -1,12 +1,11 @@
 package com.miron.product.controllers;
 
-import com.miron.product.controllers.api.ProductRequest;
 import com.miron.product.controllers.api.ProductResponse;
+import com.miron.product.services.IListenerService;
 import com.miron.product.services.IProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,12 +18,15 @@ import org.springframework.web.bind.annotation.*;
 public class ProductController {
     private final IProductService productService;
 
-    @PostMapping("/publish")
-    public ResponseEntity<ProductResponse> publish(@RequestBody ProductRequest productRequest, int count){
-        Object auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        var product = productService.findProductAndPublish(productRequest, count, auth);
-        return ResponseEntity.ok(new ProductResponse(product.getId(), product.getName(), product.getCost(), product.getDescription()));
+    @PostMapping("/cart/{product-id}")
+    public ResponseEntity<ProductResponse> cartProduct(
+            @PathVariable("product-id") int id,
+            @RequestParam(name = "count", required = true) int count,
+            Authentication authentication
+    ){
+        return ResponseEntity.ok().body(productService.findProductAndCart(id, count, authentication));
     }
+
 
     @PostMapping("/hello")
     public ResponseEntity<Object> sayHello(){

@@ -6,10 +6,9 @@ import com.miron.carting.exceptions.CartNotFoundException;
 import com.miron.carting.exceptions.ProductInCartNotFoundException;
 import com.miron.carting.repositories.CartRepository;
 import com.miron.carting.repositories.ProductInCartRepository;
-import com.miron.carting.repositories.UserRepository;
 import com.miron.carting.services.impl.CartService;
+import com.miron.carting.services.impl.ListenerService;
 import com.miron.core.models.UserInfoForCheck;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,6 +29,8 @@ import org.springframework.test.context.ActiveProfiles;
 public class CartingServiceTest {
     private User user;
     @Autowired
+    private ListenerService listenerService;
+    @Autowired
     private CartService cartService;
     @Autowired
     private ProductInCartRepository productInCartRepository;
@@ -48,7 +49,7 @@ public class CartingServiceTest {
     @Test
     @WithMockUser(username = "danya1", roles = "USER")
     public void listenerAuthContext() throws JsonProcessingException {
-        cartService.makeCheck(new UserInfoForCheck(150, SecurityContextHolder.getContext().getAuthentication().getName()));
+        listenerService.makeCheck(new UserInfoForCheck(150, SecurityContextHolder.getContext().getAuthentication().getName()));
     }
 
     @Test

@@ -1,7 +1,7 @@
 package com.miron.carting.listeners;
 
 import com.miron.carting.exceptions.InvalidMessageException;
-import com.miron.carting.services.impl.CartService;
+import com.miron.carting.services.impl.ListenerService;
 import com.miron.core.converter.StringPayloadDeserializer;
 import com.miron.core.converter.UsernameDeserializer;
 import com.miron.core.message.BuyingFromCartStatusEnum;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class BuyingFromCartEventResultListener {
     @Autowired
-    private CartService cartService;
+    private ListenerService listenerService;
     private static final Logger LOGGER = LoggerFactory.getLogger(BuyingFromCartEventResultListener.class);
 
     @KafkaListener(topics = "miron-buying-from-cart-event-result-carting", groupId = "groupId")
@@ -31,11 +31,11 @@ public class BuyingFromCartEventResultListener {
             if(payloadStatus == BuyingFromCartStatusEnum.CANCELLED){
                 LOGGER.error("Not pass validation: {}", retrievedJsonObject.getJSONArray("productsInCart"));
 
-                cartService.cancellBuyingFromCart(productsCountOnId);
-                cartService.changeUserBalance(username, ChangeBalanceStatusEnum.REJECTED);
+                listenerService.cancellBuyingFromCart(productsCountOnId);
+                listenerService.changeUserBalance(username, ChangeBalanceStatusEnum.REJECTED);
             } else if(payloadStatus == BuyingFromCartStatusEnum.CONFIRMED){
-                cartService.applyBuyingFromCart(productsCountOnId);
-                cartService.changeUserBalance(username, ChangeBalanceStatusEnum.CONFIRMED, productsCountOnId);
+                listenerService.applyBuyingFromCart(productsCountOnId);
+                listenerService.changeUserBalance(username, ChangeBalanceStatusEnum.CONFIRMED, productsCountOnId);
             }
         } catch(final InvalidMessageException ex) {
             LOGGER.error("Invalid message received: {}", serializedBuyingFromCartEventResult);

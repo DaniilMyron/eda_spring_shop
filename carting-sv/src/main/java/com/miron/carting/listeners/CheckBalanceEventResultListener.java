@@ -1,7 +1,7 @@
 package com.miron.carting.listeners;
 
 import com.miron.carting.exceptions.InvalidMessageException;
-import com.miron.carting.services.impl.CartService;
+import com.miron.carting.services.impl.ListenerService;
 import com.miron.core.converter.StringPayloadDeserializer;
 import com.miron.core.converter.UsernameDeserializer;
 import com.miron.core.message.CheckBalanceStatusEnum;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CheckBalanceEventResultListener {
     @Autowired
-    private CartService cartService;
+    private ListenerService listenerService;
     private static final Logger LOGGER = LoggerFactory.getLogger(CheckBalanceEventResultListener.class);
 
     @KafkaListener(topics = "miron-check-balance-event-result-carting", groupId = "groupId")
@@ -31,7 +31,7 @@ public class CheckBalanceEventResultListener {
                 LOGGER.info("Not enough money");
             } else if(payloadStatus == CheckBalanceStatusEnum.CONFIRMED){
                 LOGGER.info("Enough money");
-                cartService.buyFromCart(payloadProductId, username);
+                listenerService.buyFromCart(payloadProductId, username);
             }
         } catch(final InvalidMessageException ex) {
             LOGGER.error("Invalid message received: {}", serializedCheckBalanceEventResult);

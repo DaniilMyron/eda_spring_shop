@@ -1,37 +1,22 @@
-package com.miron.product.services;
+package com.miron.product.services.impl;
 
-import com.miron.product.controllers.api.ProductRequest;
 import com.miron.product.domain.Product;
 import com.miron.product.exceptions.ProductNotFoundException;
 import com.miron.product.repositories.ProductRepository;
 import com.miron.product.publishers.IProductEventPublisher;
+import com.miron.product.services.IListenerService;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-public class ProductService implements IProductService {
+public class ListenerService implements IListenerService {
     private final IProductEventPublisher publisher;
-    @Autowired
-    private ProductRepository productRepository;
-
-    @Override
-    public void discardCartedProduct(Product product) {
-        product.setCount(product.getCount() - 1);
-        productRepository.saveAndFlush(product);
-    }
-
-    @Override
-    public Product findProductAndPublish(ProductRequest request, int count, Object auth) {
-        var product = productRepository.findById(request.id()).orElseThrow(ProductNotFoundException::new);
-        publisher.publishOrderCreatingEvent(product, count, auth);
-        return product;
-    }
+    private final ProductRepository productRepository;
 
     @Override
     public void isCountValid(JSONArray productsInCartArray, String username) {

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.slf4j.Logger;
+import org.springframework.security.core.Authentication;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,7 +32,7 @@ public class ProductEventPublisher implements IProductEventPublisher {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductEventPublisher.class);
 
     @Override
-    public void publishOrderCreatingEvent(Product product, int count, Object auth) {
+    public void publishOrderCreatingEvent(Product product, int count, Authentication auth) {
         try {
             PublishedProduct publishedProduct = PublishedProduct.builder()
                     .id(product.getId())

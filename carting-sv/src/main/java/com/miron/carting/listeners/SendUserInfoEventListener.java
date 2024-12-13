@@ -1,7 +1,7 @@
 package com.miron.carting.listeners;
 
 import com.miron.carting.exceptions.InvalidMessageException;
-import com.miron.carting.services.impl.CartService;
+import com.miron.carting.services.impl.ListenerService;
 import com.miron.core.converter.StringPayloadDeserializer;
 import com.miron.core.models.UserInfoForCheck;
 import org.slf4j.Logger;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SendUserInfoEventListener {
     @Autowired
-    private CartService cartService;
+    private ListenerService listenerService;
     private static final Logger LOGGER = LoggerFactory.getLogger(SendUserInfoEventListener.class);
 
     @KafkaListener(topics = "miron-send-user-info-event-carting", groupId = "groupId")
@@ -27,8 +27,8 @@ public class SendUserInfoEventListener {
                     .payingSum(payloadUserInfo.getInt("payingSum"))
                     .authenticatedUsername(payloadUserInfo.getString("authenticatedUsername"))
                     .build();
-            cartService.makeCheck(userInfo);
-            cartService.clearCartDeleteLeftoverProducts(userInfo);
+            listenerService.makeCheck(userInfo);
+            listenerService.clearCartDeleteLeftoverProducts(userInfo);
         } catch(final InvalidMessageException ex) {
             LOGGER.error("Invalid message received: {}", serializedSendUserInfoEvent);
         }

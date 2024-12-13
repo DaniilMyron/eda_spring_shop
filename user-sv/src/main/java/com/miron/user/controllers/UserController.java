@@ -1,12 +1,14 @@
 package com.miron.user.controllers;
 
 import com.miron.user.controllers.api.RegistrationRequest;
-import com.miron.user.controllers.api.ReplenishBalance;
+import com.miron.user.controllers.api.UserResponse;
+import com.miron.user.services.IListenerService;
 import com.miron.user.services.IUserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,15 +31,17 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> registration(@RequestBody RegistrationRequest request){
-        userService.registerUser(request);
-        return ResponseEntity.ok("Registration confirmed");
+    public ResponseEntity<UserResponse> registration(
+            @Valid @RequestBody RegistrationRequest request
+    ){
+        return ResponseEntity.ok(userService.registerUser(request));
     }
 
     @PostMapping("/replenish")
-    public ResponseEntity<String> replenishBalance(@RequestBody ReplenishBalance request) {
-        var auth = SecurityContextHolder.getContext().getAuthentication();
-        var user = userService.getAuthenticatedUser(auth.getPrincipal(), request.sum());
-        return ResponseEntity.ok("Your balance now is: " + user.getBalance());
+    public ResponseEntity<UserResponse> replenishBalance(
+            @RequestParam(name = "sum", required = true) int sum,
+            Authentication auth
+    ){
+        return ResponseEntity.ok().body(userService.replenishBalance(auth, sum));
     }
 }

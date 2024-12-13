@@ -1,6 +1,5 @@
 package com.miron.carting.repositories;
 
-import com.miron.carting.controllers.model.ProductsInCartResponse;
 import com.miron.carting.domain.Cart;
 import com.miron.carting.domain.ProductInCart;
 import org.springframework.data.domain.Page;
@@ -11,9 +10,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductInCartRepository extends JpaRepository<ProductInCart, Integer>, JpaSpecificationExecutor<ProductInCart> {
-    ProductInCart findByProductId(int productId);
+    Optional<ProductInCart> findByProductId(int productId);
     List<ProductInCart> findByCartId(int cartId);
 
     @Query("""
@@ -23,5 +23,5 @@ public interface ProductInCartRepository extends JpaRepository<ProductInCart, In
             """)
     Page<ProductInCart> findAllProductsByCart(Pageable pageable, @Param("cart") Cart cart);
 
-    ProductInCart findFirstByCart(Cart cart);
+    Optional<ProductInCart> findFirstByCart(Cart cart);
 }

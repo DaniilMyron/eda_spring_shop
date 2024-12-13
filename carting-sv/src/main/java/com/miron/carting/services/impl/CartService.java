@@ -1,4 +1,4 @@
-package com.miron.carting.services;
+package com.miron.carting.services.impl;
 
 import com.miron.carting.controllers.model.PageResponse;
 import com.miron.carting.controllers.model.ProductsInCartResponse;
@@ -6,8 +6,13 @@ import com.miron.carting.converters.ObjectToProductConverter;
 import com.miron.carting.converters.ObjectToUserConverter;
 import com.miron.carting.converters.ProductsInCartToResponseConverter;
 import com.miron.carting.domain.*;
+import com.miron.carting.exceptions.CartNotFoundException;
+import com.miron.carting.exceptions.ProductInCartNotFoundException;
+import com.miron.carting.exceptions.ProductNotFoundException;
+import com.miron.carting.exceptions.UserNotFoundException;
 import com.miron.carting.repositories.*;
 import com.miron.carting.publishers.ICartingEventPublisher;
+import com.miron.carting.services.ICartService;
 import com.miron.core.converter.ObjectToMapConverter;
 import com.miron.core.converter.UsernameDeserializer;
 import com.miron.core.message.ChangeBalanceStatusEnum;
@@ -16,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,24 +31,18 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class CartService implements ICartService {
-    @Autowired
-    private ProductInCartRepository productInCartRepository;
-    @Autowired
-    private ProductRepository productRepository;
-    @Autowired
-    private CartRepository cartRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private CheckRepository checkRepository;
-    @Autowired
-    private UsersChecksRepository usersChecksRepository;
+    private final ProductInCartRepository productInCartRepository;
+    private final ProductRepository productRepository;
+    private final CartRepository cartRepository;
+    private final UserRepository userRepository;
+    private final CheckRepository checkRepository;
+    private final UsersChecksRepository usersChecksRepository;
+    private final ICartingEventPublisher publisher;
     private final ProductsInCartToResponseConverter productsInCartToResponseConverter = new ProductsInCartToResponseConverter();
     private static final Logger LOGGER = LoggerFactory.getLogger(CartService.class);
-    private final ICartingEventPublisher publisher;
 
 
     @Override
@@ -55,13 +53,16 @@ public class CartService implements ICartService {
         var username = payload.getString("authenticatedUsername");
         username = UsernameDeserializer.readUsernameFromPayload(username);
 
-        var user = userRepository.findByUsername(username);
-        var cart = cartRepository.findByUserId(user.getId());
+        var user = userRepository.findByUsername(username)
+                .orElseThrow(UserNotFoundException::new);
+        var cart = cartRepository.findByUserId(user.getId())
+                .orElseThrow(CartNotFoundException::new);
 
         var productToCart = ObjectToProductConverter.productToCartFromPayload(payload, payloadCount, cart);
         var product = ObjectToProductConverter.productFromPayload(payload);
 
-        var foundedProduct = productInCartRepository.findByProductId(productToCart.getProductId());
+        var foundedProduct = productInCartRepository.findByProductId(productToCart.getProductId())
+                .orElseThrow(ProductInCartNotFoundException::new);
         if(foundedProduct != null){
             foundedProduct.setCount(payloadCount + foundedProduct.getCount());
             productInCartRepository.save(foundedProduct);
@@ -92,54 +93,95 @@ public class CartService implements ICartService {
 
     @Override
     public PageResponse<ProductsInCartResponse> findAllProductsInCart(Authentication authentication, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
-        User user = userRepository.findByUsername(authentication.getName());
-        Cart cart = cartRepository.findByUserId(user.getId());
-        Page<ProductInCart> allProductsByCart = productInCartRepository.findAllProductsByCart(pageable, cart);
-
-        List<ProductsInCartResponse> productsInCartResponse = allProductsByCart.stream()
-                .map(productsInCartToResponseConverter)
-                .toList();
-
-        System.out.println(allProductsByCart.getTotalElements());
-        productsInCartResponse.forEach(product -> LOGGER.info("Product in cart info: {}", product));
+        Page<ProductInCart> pageOfProducts = pageableProductsToList(authentication, page, size);
+        List<ProductsInCartResponse> listOfProducts = productsListFromPage(pageOfProducts);
 
         return new PageResponse<>(
-                productsInCartResponse,
-                allProductsByCart.getNumber(),
-                allProductsByCart.getSize(),
-                allProductsByCart.getTotalElements(),
-                allProductsByCart.getTotalPages(),
-                allProductsByCart.isFirst(),
-                allProductsByCart.isLast()
+                listOfProducts,
+                pageOfProducts.getNumber(),
+                pageOfProducts.getSize(),
+                pageOfProducts.getTotalElements(),
+                pageOfProducts.getTotalPages(),
+                pageOfProducts.isFirst(),
+                pageOfProducts.isLast()
         );
     }
 
     @Override
-    public void checkBalance(Authentication authentication, int productRequestId) {
-        Product product = productRepository.findById(productRequestId).orElseThrow();
-        ProductInCart productInCart = productInCartRepository.findByProductId(productRequestId);
+    public ProductsInCartResponse checkBalance(Authentication authentication, int productRequestId) {
+        Product product = productRepository.findById(productRequestId).orElseThrow(ProductNotFoundException::new);
+        ProductInCart productInCart = productInCartRepository.findByProductId(productRequestId)
+                .orElseThrow(ProductInCartNotFoundException::new);
         this.publisher.publishBalanceEvent(productRequestId, authentication,product.getCost() * productInCart.getCount());
+        return productsInCartToResponseConverter.apply(productInCart);
     }
 
     @Override
-    public void checkBalance(Authentication authentication) {
-        Cart cart = cartRepository.findByUserId(userRepository.findByUsername(authentication.getName()).getId());
+    public PageResponse<ProductsInCartResponse> checkBalance(Authentication authentication, int page, int size) {
+        Page<ProductInCart> pageOfProducts = pageableProductsToList(authentication, page, size);
+        List<ProductsInCartResponse> listOfProducts = productsListFromPage(pageOfProducts);
+
+        Cart cart = cartRepository
+                .findByUserId(userRepository
+                        .findByUsername(authentication
+                                .getName())
+                        .orElseThrow(UserNotFoundException::new)
+                .getId())
+                .orElseThrow(CartNotFoundException::new);
         List<ProductInCart> productsInCart = productInCartRepository.findByCartId(cart.getId());
         this.publisher.publishBalanceEvent(0, authentication, productsInCart
                 .stream()
-                .mapToInt(p -> p.getCount() * productRepository.findById(p.getProductId()).orElseThrow().getCost())
+                .mapToInt(product -> product.getCount() *
+                        productRepository
+                        .findById(product
+                                .getProductId())
+                        .orElseThrow(ProductNotFoundException::new)
+                        .getCost())
                 .sum());
+
+        return new PageResponse<>(
+                listOfProducts,
+                pageOfProducts.getNumber(),
+                pageOfProducts.getSize(),
+                pageOfProducts.getTotalElements(),
+                pageOfProducts.getTotalPages(),
+                pageOfProducts.isFirst(),
+                pageOfProducts.isLast()
+        );
+    }
+
+    private Page<ProductInCart> pageableProductsToList(Authentication authentication, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
+        User user = userRepository.findByUsername(authentication.getName())
+                .orElseThrow(UserNotFoundException::new);
+        Cart cart = cartRepository.findByUserId(user.getId())
+                .orElseThrow(CartNotFoundException::new);
+        return productInCartRepository.findAllProductsByCart(pageable, cart);
+    }
+
+    private List<ProductsInCartResponse> productsListFromPage(Page<ProductInCart> allProductsByCart) {
+        List<ProductsInCartResponse> productsInCartResponse = allProductsByCart.stream()
+                .map(productsInCartToResponseConverter)
+                .toList();
+
+        productsInCartResponse.forEach(product -> LOGGER.info("Product in cart info: {}", product));
+        return productsInCartResponse;
     }
 
     @Override
     public void buyFromCart(int productId, String username) {
         if(productId == 0){
-            Cart cart = cartRepository.findByUserId(userRepository.findByUsername(username).getId());
+            Cart cart = cartRepository
+                    .findByUserId(userRepository
+                            .findByUsername(username)
+                            .orElseThrow(UserNotFoundException::new)
+                            .getId())
+                    .orElseThrow(CartNotFoundException::new);
             List<ProductInCart> productsInCart = productInCartRepository.findByCartId(cart.getId());
             this.publisher.publishBuyingEvent(productsInCart, username);
         } else {
-            ProductInCart productInCart = productInCartRepository.findByProductId(productId);
+            ProductInCart productInCart = productInCartRepository.findByProductId(productId)
+                    .orElseThrow(ProductInCartNotFoundException::new);
             this.publisher.publishBuyingEvent(List.of(productInCart), username);
         }
     }
@@ -165,7 +207,8 @@ public class CartService implements ICartService {
     public void applyBuyingFromCart(JSONObject productsCountOnId) {
         var productIdCountMap = ObjectToMapConverter.convertJSONObjectToMap(productsCountOnId);
         for (Integer key : productIdCountMap.keySet()) {
-            var productInCart = productInCartRepository.findByProductId(key);
+            var productInCart = productInCartRepository.findByProductId(key)
+                    .orElseThrow(ProductInCartNotFoundException::new);
             productInCart.setCount(productInCart.getCount() - productIdCountMap.get(key));
             productInCartRepository.save(productInCart);
         }
@@ -174,7 +217,8 @@ public class CartService implements ICartService {
     @Override
     public void returnProductsInCart(Map<Integer, Integer> productsCountOnId) {
         for (Integer key : productsCountOnId.keySet()) {
-            var productInCart = productInCartRepository.findByProductId(key);
+            var productInCart = productInCartRepository.findByProductId(key)
+                    .orElseThrow(ProductInCartNotFoundException::new);
             productInCart.setCount(productInCart.getCount() + productsCountOnId.get(key));
             productInCartRepository.save(productInCart);
         }
@@ -186,7 +230,8 @@ public class CartService implements ICartService {
                 .payingSum(userInfo.getPayingSum())
                 .build()
         );
-        var user = userRepository.findByUsername(userInfo.getAuthenticatedUsername());
+        var user = userRepository.findByUsername(userInfo.getAuthenticatedUsername())
+                .orElseThrow(UserNotFoundException::new);
         usersChecksRepository.save(UsersChecks.builder()
                 .check(check)
                 .user(user)
@@ -197,7 +242,13 @@ public class CartService implements ICartService {
 
     @Override
     public void clearCartDeleteLeftoverProducts(UserInfoForCheck userInfo) {
-        var cart = cartRepository.findByUserId(userRepository.findByUsername(userInfo.getAuthenticatedUsername()).getId());
+        var cart = cartRepository
+                .findByUserId(userRepository
+                        .findByUsername(userInfo
+                                .getAuthenticatedUsername())
+                        .orElseThrow(UserNotFoundException::new)
+                        .getId())
+                .orElseThrow(CartNotFoundException::new);
         cartRepository.save(Cart.builder()
                 .id(cart.getId())
                 .sum(cart.getSum() - userInfo.getPayingSum())

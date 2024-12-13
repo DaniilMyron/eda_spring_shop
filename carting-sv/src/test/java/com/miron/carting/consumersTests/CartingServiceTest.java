@@ -2,11 +2,14 @@ package com.miron.carting.consumersTests;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.miron.carting.converters.ProductsInCartToResponseConverter;
+import com.miron.carting.exceptions.CartNotFoundException;
+import com.miron.carting.exceptions.ProductInCartNotFoundException;
 import com.miron.carting.repositories.CartRepository;
 import com.miron.carting.repositories.ProductInCartRepository;
 import com.miron.carting.repositories.UserRepository;
-import com.miron.carting.services.CartService;
+import com.miron.carting.services.impl.CartService;
 import com.miron.core.models.UserInfoForCheck;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,8 +35,6 @@ public class CartingServiceTest {
     private ProductInCartRepository productInCartRepository;
     @Autowired
     private CartRepository cartRepository;
-    @Autowired
-    private UserRepository userRepository;
 
     @BeforeEach
     public void setup() {
@@ -60,6 +61,10 @@ public class CartingServiceTest {
     @WithMockUser(username = "danya1", roles = "USER")
     public void testConverter() throws JsonProcessingException {
         ProductsInCartToResponseConverter converter = new ProductsInCartToResponseConverter();
-        System.out.println(converter.apply(productInCartRepository.findFirstByCart(cartRepository.findByUserId(1))));
+        System.out.println(converter.apply(productInCartRepository
+                .findFirstByCart(cartRepository
+                        .findByUserId(1)
+                        .orElseThrow(CartNotFoundException::new))
+                .orElseThrow(ProductInCartNotFoundException::new)));
     }
 }

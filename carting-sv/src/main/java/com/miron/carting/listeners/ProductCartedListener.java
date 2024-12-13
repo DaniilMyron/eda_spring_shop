@@ -5,7 +5,7 @@ import com.miron.carting.repositories.CartRepository;
 import com.miron.carting.repositories.ProductInCartRepository;
 import com.miron.carting.repositories.ProductRepository;
 import com.miron.carting.repositories.UserRepository;
-import com.miron.carting.services.CartService;
+import com.miron.carting.services.impl.CartService;
 import com.miron.core.converter.StringPayloadDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,14 +15,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ProductCartedListener {
-    @Autowired
-    private ProductInCartRepository productInCartRepository;
-    @Autowired
-    private CartRepository cartRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private ProductRepository productRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductCartedListener.class);
     @Autowired
     private CartService cartService;

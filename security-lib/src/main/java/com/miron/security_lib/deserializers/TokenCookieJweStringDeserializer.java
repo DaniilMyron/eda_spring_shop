@@ -1,7 +1,6 @@
 package com.miron.security_lib.deserializers;
 
 import com.miron.security_lib.models.Token;
-import com.miron.security_lib.old.AccessTokenJwsStringDeserializer;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWEDecrypter;
 import com.nimbusds.jwt.EncryptedJWT;

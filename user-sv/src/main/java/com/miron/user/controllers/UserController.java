@@ -20,8 +20,20 @@ public class UserController {
     private final IUserService userService;
 
     @PostMapping("/auth")
-    public ResponseEntity<String> authorization(){
-        return ResponseEntity.ok("Authorization confirmed");
+    public ResponseEntity<String> authorization(Authentication authentication){
+        return ResponseEntity.ok(authentication == null ? "Authentication required" : authentication.getName());
+    }
+
+    @PostMapping("/something")
+    public ResponseEntity<String> something(){
+        //System.out.println(authentication.getPrincipal());
+        return ResponseEntity.ok("Something is good");
+    }
+
+    @GetMapping("/auth-get")
+    public ResponseEntity<String> authorizationGet(Authentication authentication){
+        System.out.println(authentication.getPrincipal());
+        return ResponseEntity.ok(authentication.getPrincipal().toString());
     }
 
     @GetMapping("/get-auth")

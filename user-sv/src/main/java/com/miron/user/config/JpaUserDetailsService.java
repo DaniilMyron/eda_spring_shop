@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import com.miron.user.repositories.UserRepository;
 
-@Service
 public class JpaUserDetailsService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;

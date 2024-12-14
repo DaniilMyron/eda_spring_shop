@@ -1,7 +1,6 @@
 package com.miron.security_lib.serializers;
 
 import com.miron.security_lib.models.Token;
-import com.miron.security_lib.old.AccessTokenJwsStringSerializer;
 import com.nimbusds.jose.*;
 import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.JWTClaimsSet;

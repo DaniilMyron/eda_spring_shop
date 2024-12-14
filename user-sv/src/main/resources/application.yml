@@ -24,11 +24,11 @@ management:
   tracing:
     sampling:
       probability: 1.0
-#logging:
-#  level:
-#    org:
-#      springframework:
-#        beans: DEBUG
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
 
 user-sv:
   groupId: groupId

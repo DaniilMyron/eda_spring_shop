@@ -8,6 +8,8 @@ import com.miron.security_lib.serializers.TokenCookieJweStringSerializer;
 import com.nimbusds.jose.crypto.DirectDecrypter;
 import com.nimbusds.jose.crypto.DirectEncrypter;
 import com.nimbusds.jose.jwk.OctetSequenceKey;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -27,32 +29,8 @@ import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 @EnableWebSecurity
 @EnableAutoConfiguration
 public class WebSecurityConfig {
-//    @Autowired
-//    public void configureGlobal(AuthenticationManagerBuilder authBuilder) throws Exception{
-//        var authenticationProvider = new PreAuthenticatedAuthenticationProvider();
-//        authenticationProvider.setPreAuthenticatedUserDetailsService(new TokenAuthenticationUserDetailsService());
-//
-//        authBuilder.userDetailsService(userDetailsService());
-//        authBuilder.authenticationProvider(authenticationProvider);
-//    }
-//    @Bean
-//    public JwtAuthenticationConfigurer jwtAuthenticationConfigurer(
-//            @Value("${jwt.access-token-key}") String accessTokenKey,
-//            @Value("${jwt.refresh-token-key}") String refreshTokenKey
-//    ) throws ParseException, JOSEException {
-//        return new JwtAuthenticationConfigurer()
-//                .accessTokenStringSerializer(new AccessTokenJwsStringSerializer(
-//                        new MACSigner(OctetSequenceKey.parse(accessTokenKey))))
-//                .refreshTokenStringSerializer(new RefreshTokenJweStringSerializer(
-//                        new DirectEncrypter(OctetSequenceKey.parse(refreshTokenKey))
-//                ))
-//                .accessTokenStringDeserializer(new AccessTokenJwsStringDeserializer(
-//                        new MACVerifier(OctetSequenceKey.parse(accessTokenKey))
-//                ))
-//                .refreshTokenStringDeserializer(new RefreshTokenJweStringDeserializer(
-//                        new DirectDecrypter(OctetSequenceKey.parse(refreshTokenKey))
-//                ));
-//    }
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebSecurityConfig.class);
+
     @Bean
     public TokenCookieAuthenticationConfigurer tokenCookieAuthenticationConfigurer(
             @Value("${jwt.cookie-token-key}") String cookieTokenKey
@@ -76,12 +54,14 @@ public class WebSecurityConfig {
             TokenCookieAuthenticationConfigurer tokenCookieAuthenticationConfigurer,
             TokenCookieJweStringSerializer tokenCookieJweStringSerializer
     ) throws Exception {
+
         var tokenCookieSessionAuthenticationStrategy = new TokenCookieSessionAuthenticationStrategy();
         tokenCookieSessionAuthenticationStrategy.setTokenStringSerializer(tokenCookieJweStringSerializer);
 
         https
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(Customizer.withDefaults())
+                //.securityMatcher("/api/v1/users/auth")
                 .addFilterAfter(new GetCsrfTokenFilter(), ExceptionTranslationFilter.class)
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -97,9 +77,9 @@ public class WebSecurityConfig {
                 )
                 .csrf(csrf -> csrf.csrfTokenRepository(new CookieCsrfTokenRepository())
                         .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
-                        .sessionAuthenticationStrategy((authentication, request, response) -> {}));
+                        .sessionAuthenticationStrategy((authentication, request, response) -> {}))
+                .with(tokenCookieAuthenticationConfigurer, Customizer.withDefaults());
 
-        https.with(tokenCookieAuthenticationConfigurer, Customizer.withDefaults());
         return https.build();
     }
 

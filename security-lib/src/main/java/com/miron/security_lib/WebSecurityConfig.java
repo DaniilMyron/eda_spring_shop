@@ -70,6 +70,11 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/v1/products/hello",
                                 "/api/v1/products/hello2",
                                 "/api/v1/users/register",
+                                "/swagger-resources/**",
+                                "/swagger-ui.html/**",
+                                "/swagger-resources/**",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
                                 "/api/v1/carts/check-cart")
                         .permitAll()
                         .anyRequest()

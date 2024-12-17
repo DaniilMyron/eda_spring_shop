@@ -29,6 +29,7 @@ logging:
     org:
       springframework:
         security: DEBUG
+      springdoc: TRACE
 
 user-sv:
   groupId: groupId

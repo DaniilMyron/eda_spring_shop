@@ -9,8 +9,8 @@
         <outputRelativeToContentRoot value="true" />
         <module name="core" />
         <module name="security-lib" />
-        <module name="carting-sv" />
         <module name="product-sv" />
+        <module name="carting-sv" />
         <module name="user-sv" />
       </profile>
     </annotationProcessing>
@@ -19,5 +19,12 @@
       <module name="miron" target="17" />
       <module name="payment-sv" target="17" />
     </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="core" options="" />
+      <module name="security-lib" options="" />
+      <module name="user-sv" options="" />
+    </option>
   </component>
 </project>

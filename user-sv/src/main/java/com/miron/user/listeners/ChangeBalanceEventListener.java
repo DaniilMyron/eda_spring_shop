@@ -5,6 +5,7 @@ import com.miron.core.converter.UsernameDeserializer;
 import com.miron.core.message.ChangeBalanceStatusEnum;
 import com.miron.user.exceptions.InvalidMessageException;
 import com.miron.user.services.impl.ListenerService;
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class ChangeBalanceEventListener {
             var productsCountOnId = retrievedJsonObject.getJSONObject("productsCountOnId");
             username = UsernameDeserializer.readUsernameFromPayload(username);
             userService.changeBalanceAndMakeCheck(username, payloadStatus, productsCountOnId);
-        } catch(final InvalidMessageException ex) {
+        } catch(final InvalidMessageException | JSONException ex) {
             LOGGER.error("Invalid message received: {}", serializedChangeBalance);
         }
     }

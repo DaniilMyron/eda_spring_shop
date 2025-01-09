@@ -6,6 +6,8 @@ import com.miron.core.converter.StringPayloadDeserializer;
 import com.miron.core.converter.UsernameDeserializer;
 import com.miron.core.message.BuyingFromCartStatusEnum;
 import com.miron.core.message.ChangeBalanceStatusEnum;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +39,7 @@ public class BuyingFromCartEventResultListener {
                 listenerService.applyBuyingFromCart(productsCountOnId);
                 listenerService.changeUserBalance(username, ChangeBalanceStatusEnum.CONFIRMED, productsCountOnId);
             }
-        } catch(final InvalidMessageException ex) {
+        } catch(final InvalidMessageException | JSONException ex) {
             LOGGER.error("Invalid message received: {}", serializedBuyingFromCartEventResult);
         }
     }

@@ -9,13 +9,14 @@
         <outputRelativeToContentRoot value="true" />
         <module name="core" />
         <module name="security-lib" />
-        <module name="product-sv" />
         <module name="carting-sv" />
+        <module name="api-gateway" />
+        <module name="product-sv" />
+        <module name="eureka-server" />
         <module name="user-sv" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="eureka-server" target="17" />
       <module name="miron" target="17" />
       <module name="payment-sv" target="17" />
     </bytecodeTargetLevel>

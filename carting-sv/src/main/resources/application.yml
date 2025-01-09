@@ -1,5 +1,10 @@
 server:
-  port: 8080
+  port: 8085
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
 
 jwt:
   access-token-key: '{"kty":"oct","k":"Q785lzcUr5u-TVWFRBTdFl_iX2FJRtIwPHGm02ZLp6Y"}'

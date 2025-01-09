@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class ObjectToMapConverter {
-    public static Map<Integer, Integer> convertJSONObjectToMap(final JSONObject productsCountOnId) throws JSONException {
+    public static Map<Integer, Integer> convertJSONObjectToMap(final JSONObject productsCountOnId) {
         Map<Integer, Integer> map = new HashMap<Integer, Integer>();
         Iterator<String> iterator = productsCountOnId.keys();
         while(iterator.hasNext()){

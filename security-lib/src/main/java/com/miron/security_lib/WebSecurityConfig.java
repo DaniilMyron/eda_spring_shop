@@ -61,7 +61,6 @@ public class WebSecurityConfig {
         https
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(Customizer.withDefaults())
-                //.securityMatcher("/api/v1/users/auth")
                 .addFilterAfter(new GetCsrfTokenFilter(), ExceptionTranslationFilter.class)
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

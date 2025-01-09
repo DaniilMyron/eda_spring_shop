@@ -14,6 +14,7 @@ import com.miron.core.converter.UsernameDeserializer;
 import com.miron.core.message.ChangeBalanceStatusEnum;
 import com.miron.core.models.UserInfoForCheck;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,9 +35,8 @@ public class ListenerService implements IListenerService {
     private final ICartingEventPublisher publisher;
     private static final Logger LOGGER = LoggerFactory.getLogger(ListenerService.class);
 
-
     @Override
-    public void addProductToCart(JSONObject retrievedJsonObject) {
+    public void addProductToCart(JSONObject retrievedJsonObject) throws JSONException {
         var payload = retrievedJsonObject.getJSONObject("publishedProduct");
         var payloadCount = retrievedJsonObject.getInt("count");
 
@@ -71,7 +71,7 @@ public class ListenerService implements IListenerService {
     }
 
     @Override
-    public void createCartOnUser(JSONObject userJsonObject) {
+    public void createCartOnUser(JSONObject userJsonObject) throws JSONException {
         var user = ObjectToUserConverter.userFromPayload(userJsonObject.getJSONObject("publishedUser"));
         userRepository.save(user);
         var cart = cartRepository.save(Cart.builder()

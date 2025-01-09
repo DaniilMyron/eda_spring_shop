@@ -18,6 +18,8 @@
     <module>user-sv</module>
     <module>core</module>
     <module>security-lib</module>
+      <module>api-gateway</module>
+      <module>eureka-server</module>
   </modules>
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

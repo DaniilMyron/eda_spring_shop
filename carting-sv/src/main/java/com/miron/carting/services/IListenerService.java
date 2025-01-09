@@ -4,6 +4,7 @@ import com.miron.carting.controllers.model.PageResponse;
 import com.miron.carting.controllers.model.ProductsInCartResponse;
 import com.miron.core.message.ChangeBalanceStatusEnum;
 import com.miron.core.models.UserInfoForCheck;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.security.core.Authentication;
 
@@ -27,7 +28,7 @@ public interface IListenerService {
 
     void returnProductsInCart(Map<Integer, Integer> productsCountOnId);
 
-    void addProductToCart(JSONObject retrievedJsonObject);
+    void addProductToCart(JSONObject retrievedJsonObject) throws JSONException;
 
-    void createCartOnUser(JSONObject userJsonObject);
+    void createCartOnUser(JSONObject userJsonObject) throws JSONException;
 }

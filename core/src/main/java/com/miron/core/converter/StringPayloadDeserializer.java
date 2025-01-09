@@ -8,11 +8,15 @@ import org.slf4j.LoggerFactory;
 public class StringPayloadDeserializer {
     private static final Logger LOGGER = LoggerFactory.getLogger(StringPayloadDeserializer.class);
 
-    public static JSONObject readStringAsJSONObject(final String json) throws JSONException {
-        LOGGER.info("Incoming object: {}", json);
-        String toParse = json.substring(1, json.length() - 1); //1 for prod - 0 for test
-        toParse = toParse.replace("\\", "");
-        LOGGER.info("Parsed object: {}", toParse);
-        return new JSONObject(toParse);
+    public static JSONObject readStringAsJSONObject(final String json) {
+        try {
+            LOGGER.info("Incoming object: {}", json);
+            String toParse = json.substring(1, json.length() - 1); //1 for prod - 0 for test
+            toParse = toParse.replace("\\", "");
+            LOGGER.info("Parsed object: {}", toParse);
+            return new JSONObject(toParse);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

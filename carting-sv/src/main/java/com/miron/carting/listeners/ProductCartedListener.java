@@ -3,6 +3,7 @@ package com.miron.carting.listeners;
 import com.miron.carting.exceptions.InvalidMessageException;
 import com.miron.carting.services.impl.ListenerService;
 import com.miron.core.converter.StringPayloadDeserializer;
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class ProductCartedListener {
             var retrievedJsonObject = StringPayloadDeserializer.readStringAsJSONObject(serializedProduct);
 
             listenerService.addProductToCart(retrievedJsonObject);
-        } catch(final InvalidMessageException ex) {
+        } catch(final InvalidMessageException | JSONException ex) {
             LOGGER.error("Invalid message received: {}", serializedProduct);
         }
     }

@@ -11,6 +11,7 @@
         <module name="security-lib" />
         <module name="carting-sv" />
         <module name="api-gateway" />
+        <module name="demo" />
         <module name="product-sv" />
         <module name="eureka-server" />
         <module name="user-sv" />
@@ -18,14 +19,20 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="miron" target="17" />
+      <module name="mironservices" target="17" />
       <module name="payment-sv" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="core" options="" />
-      <module name="security-lib" options="" />
-      <module name="user-sv" options="" />
+      <module name="api-gateway" options="-parameters" />
+      <module name="carting-sv" options="-parameters" />
+      <module name="core" options="-parameters" />
+      <module name="demo" options="-parameters" />
+      <module name="eureka-server" options="-parameters" />
+      <module name="product-sv" options="-parameters" />
+      <module name="security-lib" options="-parameters" />
+      <module name="user-sv" options="-parameters" />
     </option>
   </component>
 </project>

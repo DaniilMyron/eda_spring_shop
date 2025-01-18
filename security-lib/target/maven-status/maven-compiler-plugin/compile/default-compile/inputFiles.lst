@@ -1,0 +1,17 @@
+C:\Java_Projects\mironservices\security-lib\src\main\java\com\miron\security_lib\serializers\TokenCookieJweStringSerializer.java
+C:\Java_Projects\mironservices\security-lib\src\main\java\com\miron\security_lib\models\Token.java
+C:\Java_Projects\mironservices\security-lib\src\main\java\com\miron\security_lib\WebSecurityConfig.java
+C:\Java_Projects\mironservices\security-lib\src\main\java\com\miron\security_lib\converter\TokenCookieAuthenticationConverter.java
+C:\Java_Projects\mironservices\security-lib\src\main\java\com\miron\security_lib\configurer\TokenCookieAuthenticationConfigurer.java
+C:\Java_Projects\mironservices\security-lib\src\main\java\com\miron\security_lib\filters\TokenCookieSessionAuthenticationStrategy.java
+C:\Java_Projects\mironservices\security-lib\src\main\java\com\miron\security_lib\models\TokenUser.java
+C:\Java_Projects\mironservices\security-lib\src\main\java\com\miron\security_lib\handler\GlobalSecurityExceptionHandler.java
+C:\Java_Projects\mironservices\security-lib\src\main\java\com\miron\security_lib\filters\GetCsrfTokenFilter.java
+C:\Java_Projects\mironservices\security-lib\src\main\java\com\miron\security_lib\factories\DefaultTokenCookieFactory.java
+C:\Java_Projects\mironservices\security-lib\src\main\java\com\miron\security_lib\models\TokenAuthenticationUserDetailsService.java
+C:\Java_Projects\mironservices\security-lib\src\main\java\com\miron\security_lib\deserializers\TokenCookieJweStringDeserializer.java
+C:\Java_Projects\mironservices\security-lib\src\main\java\com\miron\security_lib\handler\ServiceEntityNotFoundException.java
+C:\Java_Projects\mironservices\security-lib\src\main\java\com\miron\security_lib\models\DeactivatedToken.java
+C:\Java_Projects\mironservices\security-lib\src\main\java\com\miron\security_lib\handler\ExceptionResponse.java
+C:\Java_Projects\mironservices\security-lib\src\main\java\com\miron\security_lib\repo\DeactivatedTokenRepository.java
+C:\Java_Projects\mironservices\security-lib\src\main\java\com\miron\security_lib\handler\BusinessErrorCodes.java

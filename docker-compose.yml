@@ -1,14 +1,84 @@
 services:
-  postgres:
+  eureka:
+    build: eureka-server
+    container_name: eureka
+    ports:
+      - "8761:8761"
+    depends_on:
+      - broker
+      - zipkin
+    networks:
+      - miron-service-network
+#    environment:
+#      SPRING_KAFKA_BOOTSTRAP_SERVERS: 'broker:29092'
+
+  api-gateway:
+    build: api-gateway
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - eureka
+    networks:
+      - miron-service-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+#  carting:
+#    build: carting-sv
+#    container_name: carting-sv
+#    ports:
+#      - "8081:8081"
+#    depends_on:
+#      - eureka
+#    networks:
+#      - miron-services
+#      - postgres
+#    environment:
+#      - SPRING_PROFILES_ACTIVE = docker
+
+  product:
+    build:
+      context: .
+      dockerfile: ./product-sv/Dockerfile
+    container_name: product-sv
+    volumes:
+      - ./settings.xml:/root/.m2/settings.xml
+    ports:
+      - "8082:8082"
+    depends_on:
+      - postgres_db
+      - eureka
+    networks:
+      - miron-service-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - MAVEN_CONFIG=/root/.m2
+      
+
+#  user:
+#    build: user-sv
+#    container_name: user-sv
+#    ports:
+#      - "8083:8083"
+#    depends_on:
+#      - eureka
+#    networks:
+#      - miron-services
+#      - postgres
+#    environment:
+#      - SPRING_PROFILES_ACTIVE = docker
+
+  postgres_db:
     container_name: postgres
     image: postgres
     environment:
       POSTGRES_USER: miron
       POSTGRES_PASSWORD: root
       PGDATA: /var/lib/postgresql/data
-      POSTGRES_DB: miron_services
+      POSTGRES_DB: product
     networks:
-      - miron-services
+      - miron-service-network
     volumes:
       - postgres:/data/postgres
     ports:
@@ -27,6 +97,8 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - miron-service-network
 
   broker:
     image: confluentinc/cp-kafka:7.3.0
@@ -41,48 +113,15 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9092,PLAINTEXT_INTERNAL://broker:29092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-
-  mironservice:
-    build: .
-    container_name: mironservice
-    depends_on:
-      - broker
-    environment:
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: 'broker:29092'
-
-#  carting-sv:
-#    build: ./carting-sv
-#    container_name: carting-sv
-#    depends_on:
-#      - broker
-#      - mironservice
-#    environment:
-#      SPRING_KAFKA_BOOTSTRAP_SERVERS: 'broker:29092'
-#
-#  product-sv:
-#    build: ./product-sv
-#    container_name: product-sv
-#    depends_on:
-#      - broker
-#      - mironservice
-#    environment:
-#      SPRING_KAFKA_BOOTSTRAP_SERVERS: 'broker:29092'
-#
-#  user-sv:
-#    build: ./user-sv
-#    container_name: user-sv
-#    depends_on:
-#      - broker
-#      - mironservice
-#    environment:
-#      SPRING_KAFKA_BOOTSTRAP_SERVERS: 'broker:29092'
+    networks:
+      - miron-service-network
 
 networks:
-  miron-services:
+  miron-service-network:
     driver: bridge
 
 volumes:

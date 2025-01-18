@@ -11,7 +11,6 @@ import com.miron.product.exceptions.ProductPublishException;
 import com.miron.product.publishers.IProductEventPublisher;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.slf4j.Logger;

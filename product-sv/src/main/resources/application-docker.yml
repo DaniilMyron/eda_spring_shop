@@ -1,0 +1,28 @@
+server:
+  port: 8082
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka:8761/eureka
+
+spring:
+  kafka:
+    bootstrap-servers: broker:9092
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    url: jdbc:postgresql://postgres_db:5432/product
+    username: miron
+    password: root
+
+logging:
+  level:
+    root: INFO
+    org.springframework.core.env: DEBUG

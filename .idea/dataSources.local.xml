@@ -44,5 +44,10 @@
         </introspection-scope>
       </schema-mapping>
     </data-source>
+    <data-source name="miron_services@postgres" uuid="2177a551-ef14-4e4e-83b7-53425492225e">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="POSTGRES" />
+      <user-name>miron</user-name>
+      <schema-mapping />
+    </data-source>
   </component>
 </project>

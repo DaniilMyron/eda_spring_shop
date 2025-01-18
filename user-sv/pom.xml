@@ -17,7 +17,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <my.dependencies.version>3.2.5</my.dependencies.version>
+        <my.dependencies.version>0.0.1-SNAPSHOT</my.dependencies.version>
     </properties>
 
     <!-- All dependencyManagement + dependencies + build -->
@@ -42,13 +42,13 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
+            <groupId>com.miron</groupId>
             <artifactId>security-lib</artifactId>
             <version>${my.dependencies.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
+            <groupId>com.miron</groupId>
             <artifactId>core</artifactId>
             <version>${my.dependencies.version}</version>
             <scope>compile</scope>

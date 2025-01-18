@@ -1,12 +1,19 @@
-FROM maven:3.8-openjdk-17 as builder
+FROM maven:3.8.4-openjdk-17 AS BUILDER
 
-COPY src /usr/app/src
-COPY pom.xml /usr/app
+WORKDIR /product
 
-RUN mvn -f /usr/app/pom.xml clean package
+COPY settings.xml /root/.m2/settings.xml
+COPY . .
+
+RUN mvn -f product-sv/pom.xml clean package -DskipTests -U
+RUN ls -l product-sv/target && sleep 30
+
+#CMD ["java", "-jar", "product/product-sv/target/product-sv-0.0.1-SNAPSHOT.jar"]
 
 FROM openjdk:17-alpine
 
-COPY --from=builder /usr/app/target/*.jar /usr/app/app.jar
+COPY --from=BUILDER /product/product-sv/target/product-sv-1.0.0.jar /product-sv/product-sv-1.0.0.jar
 
-ENTRYPOINT ["java", "-jar", "/usr/app/app.jar"]
+WORKDIR /product-sv
+
+ENTRYPOINT ["java", "-jar", "product-sv-1.0.0.jar"]

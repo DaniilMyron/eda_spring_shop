@@ -7,8 +7,6 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="core" />
-        <module name="security-lib" />
         <module name="carting-sv" />
         <module name="api-gateway" />
         <module name="demo" />
@@ -31,7 +29,7 @@
       <module name="demo" options="-parameters" />
       <module name="eureka-server" options="-parameters" />
       <module name="product-sv" options="-parameters" />
-      <module name="security-lib" options="-parameters" />
+      <module name="security-lib" options="" />
       <module name="user-sv" options="-parameters" />
     </option>
   </component>

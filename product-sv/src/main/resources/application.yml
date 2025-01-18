@@ -1,5 +1,5 @@
 server:
-  port: 8010
+  port: 8082
 
 eureka:
   client:
@@ -45,3 +45,8 @@ product-sv:
     consumes:
       buyingFromCartEvent: miron-buying-from-cart-event-product
       cancelBuyingFromCartEvent: miron-cancel-buying-from-cart-event-product
+
+logging:
+  level:
+    root: INFO
+    org.springframework.core.env: DEBUG

@@ -11,13 +11,31 @@
     </parent>
 
     <artifactId>product-sv</artifactId>
+    <version>1.0.0</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <my.dependencies.version>3.2.5</my.dependencies.version>
+        <my.dependencies.version>0.0.1-SNAPSHOT</my.dependencies.version>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/DaniilMyron/eda_spring_shop</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/DaniilMyron/eda_spring_shop</url>
+        </repository>
+    </distributionManagement>
 
     <!-- All dependencyManagement + dependencies + build -->
     <dependencyManagement>
@@ -41,15 +59,15 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
+            <groupId>com.miron</groupId>
             <artifactId>security-lib</artifactId>
-            <version>${my.dependencies.version}</version>
+            <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
+            <groupId>com.miron</groupId>
             <artifactId>core</artifactId>
-            <version>${my.dependencies.version}</version>
+            <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 

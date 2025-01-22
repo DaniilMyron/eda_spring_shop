@@ -11,6 +11,7 @@
     </parent>
 
     <artifactId>carting-sv</artifactId>
+    <version>1.0.0</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -43,13 +44,13 @@
         <dependency>
             <groupId>com.miron</groupId>
             <artifactId>security-lib</artifactId>
-            <version>${my.dependencies.version}</version>
+            <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.miron</groupId>
             <artifactId>core</artifactId>
-            <version>${my.dependencies.version}</version>
+            <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 

@@ -18,7 +18,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   datasource:
-    url: jdbc:postgresql://postgres_db:5432/product
+    url: jdbc:postgresql://postgres_db_product:5432/product
     username: miron
     password: root
 

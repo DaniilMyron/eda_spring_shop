@@ -6,13 +6,9 @@ eureka:
     service-url:
       defaultZone: http://eureka:8761/eureka
 
-jwt:
-  cookie-token-key: '{"kty":"oct","k":"g3DzsM80Aw74n5yarI3xZw"}'
 spring:
   kafka:
-    bootstrap-servers: 172.28.141.236:9092
-  application:
-    name: users
+    bootstrap-servers: broker:9092
   jpa:
     database: POSTGRESQL
     show-sql: true
@@ -22,28 +18,11 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   datasource:
-    url: jdbc:postgresql://postgres:5432/users
+    url: jdbc:postgresql://postgres_db_user:5432/user
     username: miron
     password: root
-management:
-  tracing:
-    sampling:
-      probability: 1.0
+
 logging:
   level:
-    org:
-      springframework:
-        security: DEBUG
-      springdoc: TRACE
-
-user-sv:
-  groupId: groupId
-  topic:
-    produces:
-      userRegisteredEvent: miron-user-registered-event-carting
-      checkBalanceEvent: miron-check-balance-event-result-carting
-      sendUserInfoForCheckEvent: miron-send-user-info-event-carting
-      returnProductsInCartEventValue: miron-return-products-in-cart-event-carting
-    consumes:
-      checkBalanceEvent: miron-check-balance-event-user
-      changeBalanceEvent: miron-change-balance-event-user
+    root: INFO
+    org.springframework.core.env: DEBUG

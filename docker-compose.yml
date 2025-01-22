@@ -24,18 +24,21 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
 
-#  carting:
-#    build: carting-sv
-#    container_name: carting-sv
-#    ports:
-#      - "8081:8081"
-#    depends_on:
-#      - eureka
-#    networks:
-#      - miron-services
-#      - postgres
-#    environment:
-#      - SPRING_PROFILES_ACTIVE = docker
+  carting:
+    build:
+      context: .
+      dockerfile: ./carting-sv/Dockerfile
+    container_name: carting-sv
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres_db_carting
+      - eureka
+    networks:
+      - miron-service-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - MAVEN_CONFIG=/root/.m2
 
   product:
     build:
@@ -47,7 +50,7 @@ services:
     ports:
       - "8082:8082"
     depends_on:
-      - postgres_db
+      - postgres_db_product
       - eureka
     networks:
       - miron-service-network
@@ -56,27 +59,62 @@ services:
       - MAVEN_CONFIG=/root/.m2
       
 
-#  user:
-#    build: user-sv
-#    container_name: user-sv
-#    ports:
-#      - "8083:8083"
-#    depends_on:
-#      - eureka
-#    networks:
-#      - miron-services
-#      - postgres
-#    environment:
-#      - SPRING_PROFILES_ACTIVE = docker
+  user:
+    build:
+      context: .
+      dockerfile: ./user-sv/Dockerfile
+    container_name: user-sv
+    ports:
+      - "8083:8083"
+    depends_on:
+      - postgres_db_user
+      - eureka
+    networks:
+      - miron-service-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - MAVEN_CONFIG=/root/.m2
 
-  postgres_db:
-    container_name: postgres
+  postgres_db_carting:
+    container_name: postgres_carting
+    image: postgres
+    environment:
+      POSTGRES_USER: miron
+      POSTGRES_PASSWORD: root
+      PGDATA: /var/lib/postgresql/data
+      POSTGRES_DB: carting
+    networks:
+      - miron-service-network
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  postgres_db_product:
+    container_name: postgres_product
     image: postgres
     environment:
       POSTGRES_USER: miron
       POSTGRES_PASSWORD: root
       PGDATA: /var/lib/postgresql/data
       POSTGRES_DB: product
+    networks:
+      - miron-service-network
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  postgres_db_user:
+    container_name: postgres_user
+    image: postgres
+    environment:
+      POSTGRES_USER: miron
+      POSTGRES_PASSWORD: root
+      PGDATA: /var/lib/postgresql/data
+      POSTGRES_DB: user
     networks:
       - miron-service-network
     volumes:

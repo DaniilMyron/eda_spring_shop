@@ -6,15 +6,9 @@ eureka:
     service-url:
       defaultZone: http://eureka:8761/eureka
 
-jwt:
-  access-token-key: '{"kty":"oct","k":"Q785lzcUr5u-TVWFRBTdFl_iX2FJRtIwPHGm02ZLp6Y"}'
-  refresh-token-key: '{"kty":"oct","k":"g3DzsM80Aw74n5yarI3xZw"}'
-  cookie-token-key: '{"kty":"oct","k":"g3DzsM80Aw74n5yarI3xZw"}'
 spring:
   kafka:
-    bootstrap-servers: 172.28.141.236:9092
-  application:
-    name: carting
+    bootstrap-servers: broker:9092
   jpa:
     database: POSTGRESQL
     show-sql: true
@@ -24,26 +18,11 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   datasource:
-    url: jdbc:postgresql://postgres:5432/users
+    url: jdbc:postgresql://postgres_db_carting:5432/carting
     username: miron
     password: root
-management:
-  tracing:
-    sampling:
-      probability: 1.0
 
-carting-sv:
-  groupId: groupId
-  topic:
-    produces:
-      checkBalanceEvent: miron-check-balance-event-user
-      buyingFromCartEvent: miron-buying-from-cart-event-product
-      cancelBuyingFromCartEvent: miron-cancel-buying-from-cart-event-product
-      changeBalanceEvent: miron-change-balance-event-user
-    consumes:
-      productAddedToCartEvent: miron-add-product-to-cart-event-carting
-      userRegisteredEvent: miron-user-registered-event-carting
-      checkBalanceEventResult: miron-check-balance-event-result-carting
-      buyingFromCartEventResult: miron-buying-from-cart-event-result-carting
-      sendUserInfoForCheckEvent: miron-send-user-info-event-carting
-      returnProductsInCartEventValue: miron-return-products-in-cart-event-carting
+logging:
+  level:
+    root: INFO
+    org.springframework.core.env: DEBUG
